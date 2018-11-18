@@ -6,16 +6,16 @@
     <color name="colorAccent">#000000</color>
     <color name="backgroundColor">#000000</color>
 
-    <color name="primaryButtonStart">#990014</color>
+    <color name="primaryButtonStart">#004080</color>
     <color name="primaryButtonEnd">#000000</color>
     <color name="primaryButtonBorder">#FFFFFF</color>
 
     <color name="primaryButtonFocusedStart">#000000</color>
-    <color name="primaryButtonFocusedEnd">#990014</color>
+    <color name="primaryButtonFocusedEnd">#004080</color>
     <color name="primaryButtonFocusedBorder">#FFFFFF</color>
 
     <color name="primaryButtonPressedStart">#000000</color>
-    <color name="primaryButtonPressedEnd">#990014</color>
+    <color name="primaryButtonPressedEnd">#004080</color>
     <color name="primaryButtonPressedBorder">#FFFFFF</color>
 
 </resources>
