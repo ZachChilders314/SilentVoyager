@@ -1,12 +1,11 @@
-package com.example.dylan.silentvoyager;
+package com.x10host.dylan.silentvoyager;
 
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.VideoView;
 
-public class RegisterActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private String PATH;
     private VideoView introVideoView;
@@ -18,7 +17,7 @@ public class RegisterActivity extends AppCompatActivity {
         PATH = data.getString("PATH");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_login);
 
 
         introVideoView = (VideoView) findViewById(R.id.introVideoView);

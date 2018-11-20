@@ -1,4 +1,4 @@
-package com.example.dylan.silentvoyager;
+package com.x10host.dylan.silentvoyager;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
