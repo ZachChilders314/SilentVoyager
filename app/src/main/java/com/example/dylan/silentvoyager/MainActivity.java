@@ -7,16 +7,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
     
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private VideoView introVideoView;
     private Button btnLogin;
+    private Button btnRegister;
 
     private final String ERROR_MESSAGE_PERMISSIONS = "NOTICE: All Permissions Required to Proceed!";
     private final String SUCCESS_MESSAGE_PERMISSIONS = "NOTICE: All Permissions Granted.";
@@ -44,10 +44,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        PATH = "android.resource://" + getPackageName() + "/" + R.raw.fly_by;
+        PATH = "android.resource://" + getPackageName() + "/" + R.raw.background_video;
 
         introVideoView = (VideoView) findViewById(R.id.introVideoView);
         btnLogin       = (Button) findViewById(R.id.btnLogin);
+        btnRegister    = (Button) findViewById(R.id.btnRegister);
 
         introVideoView.setVideoPath(this.PATH);
         introVideoView.requestFocus();
@@ -60,24 +61,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnRegister.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                if(checkIfPermissionsGranted(ACTIVITY_PERMISSIONS)) {
+
+                    Intent registerIntent = new Intent(getApplicationContext(), RegisterActivity.class);
+                    registerIntent.putExtra("PATH", PATH);
+                    startActivity(registerIntent);
+
+                } else {
+
+                    Toast.makeText(getApplicationContext(), ERROR_MESSAGE_PERMISSIONS,
+                            Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
+
         btnLogin.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
-                if(getNonGrantedPermissions(ACTIVITY_PERMISSIONS).length != 0) {
+                if(checkIfPermissionsGranted(ACTIVITY_PERMISSIONS)) {
+
+                    Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                    loginIntent.putExtra("PATH", PATH);
+                    startActivity(loginIntent);
+
+                } else {
+
                     Toast.makeText(getApplicationContext(), ERROR_MESSAGE_PERMISSIONS,
                             Toast.LENGTH_LONG).show();
 
-                    String[] permissionsDenied
-                            = getNonGrantedPermissions(ACTIVITY_PERMISSIONS);
-
-                    synchronized(this) {
-                        requestPermissions(permissionsDenied);
-                    }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), SUCCESS_MESSAGE_PERMISSIONS,
-                            Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -112,6 +130,23 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(this,
                 permissions, REQUEST_MULTIPLE);
+
+    }
+
+    private boolean checkIfPermissionsGranted(String[] permissionsList) {
+
+        if(getNonGrantedPermissions(permissionsList).length != 0) {
+
+            String[] permissionsDenied
+                    = getNonGrantedPermissions(permissionsList);
+
+            synchronized (this) {
+                requestPermissions(permissionsDenied);
+            }
+
+            return false;
+
+        } else {  return true;  }
 
     }
 
