@@ -3,8 +3,8 @@
     <item android:state_pressed="true" >
         <shape android:shape="rectangle"  >
             <corners android:radius="10dip" />
-            <stroke android:width="1dip" android:color="@color/textBoxInputPressedBorder" />
-            <gradient android:angle="-90" android:startColor="@color/textBoxInputPressedStart" android:endColor="@color/textBoxInputPressedEnd"  />
+            <stroke android:width="1dip" android:color="@color/outlineDarkPressedBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkPressedStart" android:endColor="@color/outlineDarkPressedEnd"  />
             <padding android:left="5dp"
                 android:top="5dp"
                 android:right="5dp"
@@ -14,8 +14,8 @@
     <item android:state_focused="true">
         <shape android:shape="rectangle"  >
             <corners android:radius="10dip" />
-            <stroke android:width="1dip" android:color="@color/textBoxInputFocusedBorder" />
-            <gradient android:angle="-90" android:startColor="@color/textBoxInputFocusedStart" android:endColor="@color/textBoxInputFocusedEnd"  />
+            <stroke android:width="1dip" android:color="@color/outlineDarkFocusedBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkFocusedStart" android:endColor="@color/outlineDarkFocusedEnd"  />
             <padding android:left="5dp"
                 android:top="5dp"
                 android:right="5dp"
@@ -25,8 +25,8 @@
     <item >
         <shape android:shape="rectangle"  >
             <corners android:radius="10dip" />
-            <stroke android:width="1dip" android:color="@color/textBoxInputBorder" />
-            <gradient android:angle="-90" android:startColor="@color/textBoxInputStart" android:endColor="@color/textBoxInputEnd" />
+            <stroke android:width="1dip" android:color="@color/outlineDarkBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkStart" android:endColor="@color/outlineDarkEnd" />
             <padding android:left="5dp"
                 android:top="5dp"
                 android:right="5dp"

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_pressed="true" >
+        <shape android:shape="rectangle"  >
+            <corners android:radius="10dip" />
+            <stroke android:width="1dip" android:color="@color/primaryButtonLoginPressedBorder" />
+            <gradient android:angle="-90" android:startColor="@color/primaryButtonLoginPressedStart" android:endColor="@color/primaryButtonLoginPressedEnd"  />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle"  >
+            <corners android:radius="10dip" />
+            <stroke android:width="1dip" android:color="@color/primaryButtonLoginFocusedBorder" />
+            <gradient android:angle="-90" android:startColor="@color/primaryButtonLoginFocusedStart" android:endColor="@color/primaryButtonLoginFocusedEnd"  />
+        </shape>
+    </item>
+    <item >
+        <shape android:shape="rectangle"  >
+            <corners android:radius="10dip" />
+            <stroke android:width="1dip" android:color="@color/primaryButtonLoginBorder" />
+            <gradient android:angle="-90" android:startColor="@color/primaryButtonLoginStart" android:endColor="@color/primaryButtonLoginEnd" />
+        </shape>
+    </item>
+</selector>

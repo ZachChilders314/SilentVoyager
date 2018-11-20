@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_pressed="true" >
+        <shape android:shape="rectangle"  >
+            <corners android:radius="10dip" />
+            <stroke android:width="1dip" android:color="@color/outlineDarkTransparentPressedBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkTransparentPressedStart" android:endColor="@color/outlineDarkTransparentPressedEnd"  />
+            <padding android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp"/>
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle"  >
+            <corners android:radius="10dip" />
+            <stroke android:width="1dip" android:color="@color/outlineDarkTransparentFocusedBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkTransparentFocusedStart" android:endColor="@color/outlineDarkTransparentFocusedEnd"  />
+            <padding android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp"/>
+        </shape>
+    </item>
+    <item >
+        <shape android:shape="rectangle"  >
+            <corners android:radius="10dip" />
+            <stroke android:width="1dip" android:color="@color/outlineDarkTransparentBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkTransparentStart" android:endColor="@color/outlineDarkTransparentEnd" />
+            <padding android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp"/>
+        </shape>
+    </item>
 </selector>
