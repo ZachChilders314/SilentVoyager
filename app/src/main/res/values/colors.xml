@@ -4,18 +4,55 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#000000</color>
+    <color name="green">#00FF00</color>
     <color name="backgroundColor">#000000</color>
 
-    <color name="primaryButtonStart">#004080</color>
-    <color name="primaryButtonEnd">#000000</color>
-    <color name="primaryButtonBorder">#FFFFFF</color>
+    <color name="primaryButtonLoginStart">#0099ff</color>
+    <color name="primaryButtonLoginEnd">#000000</color>
+    <color name="primaryButtonLoginBorder">#FFFFFF</color>
 
-    <color name="primaryButtonFocusedStart">#000000</color>
-    <color name="primaryButtonFocusedEnd">#004080</color>
-    <color name="primaryButtonFocusedBorder">#FFFFFF</color>
+    <color name="primaryButtonLoginFocusedStart">#000000</color>
+    <color name="primaryButtonLoginFocusedEnd">#0099ff</color>
+    <color name="primaryButtonLoginFocusedBorder">#FFFFFF</color>
 
-    <color name="primaryButtonPressedStart">#000000</color>
-    <color name="primaryButtonPressedEnd">#004080</color>
-    <color name="primaryButtonPressedBorder">#FFFFFF</color>
+    <color name="primaryButtonLoginPressedStart">#000000</color>
+    <color name="primaryButtonLoginPressedEnd">#0099ff</color>
+    <color name="primaryButtonLoginPressedBorder">#FFFFFF</color>
+
+    <color name="primaryButtonRegisterStart">#ff0000</color>
+    <color name="primaryButtonRegisterEnd">#000000</color>
+    <color name="primaryButtonRegisterBorder">#FFFFFF</color>
+
+    <color name="primaryButtonRegisterFocusedStart">#000000</color>
+    <color name="primaryButtonRegisterFocusedEnd">#ff0000</color>
+    <color name="primaryButtonRegisterFocusedBorder">#FFFFFF</color>
+
+    <color name="primaryButtonRegisterPressedStart">#000000</color>
+    <color name="primaryButtonRegisterPressedEnd">#ff0000</color>
+    <color name="primaryButtonRegisterPressedBorder">#FFFFFF</color>
+
+    <color name="outlineDarkStart">#000000</color>
+    <color name="outlineDarkEnd">#000000</color>
+    <color name="outlineDarkBorder">#FFFFFF</color>
+
+    <color name="outlineDarkFocusedStart">#000000</color>
+    <color name="outlineDarkFocusedEnd">#000000</color>
+    <color name="outlineDarkFocusedBorder">#0099ff</color>
+
+    <color name="outlineDarkPressedStart">#000000</color>
+    <color name="outlineDarkPressedEnd">#000000</color>
+    <color name="outlineDarkPressedBorder">#0099ff</color>
+
+    <color name="outlineDarkTransparentStart">@android:color/transparent</color>
+    <color name="outlineDarkTransparentEnd">@android:color/transparent</color>
+    <color name="outlineDarkTransparentBorder">#FFFFFF</color>
+
+    <color name="outlineDarkTransparentFocusedStart">@android:color/transparent</color>
+    <color name="outlineDarkTransparentFocusedEnd">@android:color/transparent</color>
+    <color name="outlineDarkTransparentFocusedBorder">#0099ff</color>
+
+    <color name="outlineDarkTransparentPressedStart">@android:color/transparent</color>
+    <color name="outlineDarkTransparentPressedEnd">@android:color/transparent</color>
+    <color name="outlineDarkTransparentPressedBorder">#0099ff</color>
 
 </resources>
