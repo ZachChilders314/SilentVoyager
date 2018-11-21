@@ -6,6 +6,9 @@
     <color name="colorAccent">#000000</color>
     <color name="green">#00FF00</color>
     <color name="backgroundColor">#000000</color>
+    <color name="lightBlue">#0099ff</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">@android:color/transparent</color>
 
     <color name="primaryButtonLoginStart">#0099ff</color>
     <color name="primaryButtonLoginEnd">#000000</color>

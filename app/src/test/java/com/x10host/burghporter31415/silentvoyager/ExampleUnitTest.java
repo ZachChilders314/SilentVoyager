@@ -1,4 +1,4 @@
-package com.x10host.dylan.silentvoyager;
+package com.x10host.burghporter31415.silentvoyager;
 
 import org.junit.Test;
 
