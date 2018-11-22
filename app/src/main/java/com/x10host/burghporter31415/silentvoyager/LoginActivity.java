@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.x10host.burghporter31415.internetservices.InternetPHPRequestServiceLogin;
+import com.x10host.burghporter31415.internetservices.InternetPHPRequestService;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(), InternetPHPRequestServiceLogin.class);
+                Intent intent = new Intent(getApplicationContext(), InternetPHPRequestService.class);
 
                 intent.putExtra("username", txtUsername.getText().toString());
                 intent.putExtra("password", txtPassword.getText().toString());

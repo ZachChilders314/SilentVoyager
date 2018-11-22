@@ -23,7 +23,7 @@
         <activity android:name="com.x10host.burghporter31415.silentvoyager.RegisterActivity" />
         <activity android:name="com.x10host.burghporter31415.silentvoyager.LoginActivity" />
         <activity android:name="com.x10host.burghporter31415.silentvoyager.Dashboard"></activity>
-        <service android:name="com.x10host.burghporter31415.internetservices.InternetPHPRequestServiceLogin"></service>
+        <service android:name="com.x10host.burghporter31415.internetservices.InternetPHPRequestService"></service>
     </application>
 
 </manifest>

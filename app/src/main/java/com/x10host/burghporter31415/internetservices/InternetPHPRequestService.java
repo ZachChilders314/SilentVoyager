@@ -11,13 +11,13 @@ import com.x10host.burghporter31415.webconnector.FormPost;
 import com.x10host.burghporter31415.webconnector.MethodType;
 import com.x10host.burghporter31415.webconnector.PHPPage;
 
-public class InternetPHPRequestServiceLogin extends Service {
+public class InternetPHPRequestService extends Service {
 
     private static final String TAG = "com.x10host";
 
     private PendingIntent data;
 
-    public InternetPHPRequestServiceLogin() {
+    public InternetPHPRequestService() {
 
     }
 
@@ -37,26 +37,29 @@ public class InternetPHPRequestServiceLogin extends Service {
 
                     try {
 
-                        String username = extras.getString("username");
-                        String password = extras.getString("password");
-
                         String BASE_URL = extras.getString("BASE_URL");
                         String RELATIVE_URL = extras.getString("RELATIVE_URL");
+
+                        /*Do not send in POST*/
+                        extras.remove("BASE_URL");
+                        extras.remove("RELATIVE_URL");
+                        extras.remove("pendingIntent");
 
                         FormPost<String, String> connection = new FormPost<String, String>();
 
                         PHPPage page = new PHPPage(BASE_URL, RELATIVE_URL);
 
-                        connection.addPair("username", username);
-                        connection.addPair("password", password);
+                        for(String key : extras.keySet()) {
+                            Log.i(TAG, key);
+                            connection.addPair(key, extras.getString(key));
+                            resultIntent.putExtra(key, extras.getString(key));
+                        }
 
                         String result = connection.submitPost(page, MethodType.POST);
 
                         resultIntent.putExtra("result", result);
-                        resultIntent.putExtra("username", username);
-                        resultIntent.putExtra("password", password);
 
-                        data.send(InternetPHPRequestServiceLogin.this, 200, resultIntent);
+                        data.send(InternetPHPRequestService.this, 200, resultIntent);
 
                     } catch(Exception e) {
                         Log.i(TAG, "Failed");
