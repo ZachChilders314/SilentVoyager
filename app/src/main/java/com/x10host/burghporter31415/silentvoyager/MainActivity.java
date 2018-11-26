@@ -22,7 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private final String[] ACTIVITY_PERMISSIONS = {
             Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.RECORD_AUDIO
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
     private final int REQUEST_INTERNET = 0;

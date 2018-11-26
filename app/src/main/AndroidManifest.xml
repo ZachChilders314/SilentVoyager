@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +27,17 @@
         <activity android:name="com.x10host.burghporter31415.silentvoyager.LoginActivity" />
         <activity android:name="com.x10host.burghporter31415.silentvoyager.Dashboard"></activity>
         <service android:name="com.x10host.burghporter31415.internetservices.InternetPHPRequestService"></service>
+        <service android:name="com.x10host.burghporter31415.internetservices.BackgroundUploadService"></service>
+        <receiver android:name="com.x10host.burghporter31415.internetservices.BackgroundServiceBroadcast"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter >
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="com.x10host.burghporter31415.internetservices.android.action.broadcast"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
