@@ -50,7 +50,6 @@ public class InternetPHPRequestService extends Service {
                         PHPPage page = new PHPPage(BASE_URL, RELATIVE_URL);
 
                         for(String key : extras.keySet()) {
-                            Log.i(TAG, key);
                             connection.addPair(key, extras.getString(key));
                             resultIntent.putExtra(key, extras.getString(key));
                         }
@@ -62,7 +61,7 @@ public class InternetPHPRequestService extends Service {
                         data.send(InternetPHPRequestService.this, 200, resultIntent);
 
                     } catch(Exception e) {
-                        Log.i(TAG, "Failed");
+                        Log.i(TAG, "Credential Validation Failed");
                     }
 
 

@@ -10,6 +10,8 @@
 
 package com.x10host.burghporter31415.webconnector;
 
+import android.util.Log;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -26,6 +28,7 @@ import java.util.List;
 public class FormPost <K,V> {
 
     private HashMap <K, V> KVMap;
+    private List<V> values;
 
     public FormPost(K key, V value) {
 
@@ -34,7 +37,7 @@ public class FormPost <K,V> {
 
     }
 
-    public FormPost() { KVMap = new HashMap <K, V>(); }
+    public FormPost() { KVMap = new HashMap <K, V>(); values = new ArrayList<V>(); }
 
     /*TODO: Handle GET and HEAD*/
 
@@ -64,7 +67,6 @@ public class FormPost <K,V> {
 
         } catch(Exception ex) {
             result = "Failed";
-            ex.printStackTrace();
         }
 
         return result;
@@ -78,6 +80,13 @@ public class FormPost <K,V> {
 
     public void addPair(K key, V value) {
         this.KVMap.put(key, value);
+        this.values.add(value);
+    }
+
+    public V[] getValues() {
+        String[] arr = new String[values.size()];
+        arr = values.toArray(arr);
+        return (V[]) arr;
     }
 
 }

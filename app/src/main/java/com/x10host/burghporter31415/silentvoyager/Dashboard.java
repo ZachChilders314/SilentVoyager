@@ -42,7 +42,7 @@ public class Dashboard extends AppCompatActivity {
 
         com.x10host.burghporter31415.fileactions.File file = new com.x10host.burghporter31415.fileactions.File(FILE_NAME);
 
-        if (file.fileExists(getApplicationContext(), FILE_NAME)) {
+        if (file.fileExists(getApplicationContext())) {
             file.deleteFile(getApplicationContext(), FILE_NAME);
         }
 
@@ -51,7 +51,7 @@ public class Dashboard extends AppCompatActivity {
             getIntent().getExtras().getString("password")
         };
 
-        file.writeToFile(getApplicationContext(), FILE_NAME, args);
+        file.writeToFile(getApplicationContext(), args);
 
         Intent broadcast = new Intent("com.x10host.burghporter31415.internetservices.android.action.broadcast");
         broadcast.setClass(this, BackgroundServiceBroadcast.class);

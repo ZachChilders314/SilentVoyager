@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private final String FAILED_LOGIN = "ERROR: Invalid Credentials";
     private final String SUCCESSFUL_LOGIN = "Success: Loading Dashboard";
+    private final String FILE_NAME="Silent_Voyager_Credentials.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
         txtUsername    = (EditText) findViewById(R.id.txtUsername);
         txtPassword    = (EditText) findViewById(R.id.txtPassword);
 
-
         introVideoView.setVideoPath(this.PATH);
         introVideoView.requestFocus();
         introVideoView.start();
@@ -53,6 +53,15 @@ public class LoginActivity extends AppCompatActivity {
                 mp.setLooping(true);
             }
         });
+
+        com.x10host.burghporter31415.fileactions.File file = new com.x10host.burghporter31415.fileactions.File(FILE_NAME);
+
+        /*Auto-fill login*/
+        if(file.fileExists(getApplicationContext())) {
+            String[] results = file.readFile(getApplicationContext()).split("\n");
+            txtUsername.setText(results[0].trim());
+            txtPassword.setText(results[1].trim());
+        }
 
         btnLogin.setOnClickListener(new View.OnClickListener(){
             @Override

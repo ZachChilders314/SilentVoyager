@@ -11,6 +11,8 @@ import com.x10host.burghporter31415.fileactions.File;
 public class BackgroundServiceBroadcast extends BroadcastReceiver {
 
     private final String FILE_NAME="Silent_Voyager_Credentials.txt";
+    private final String BASE_URL = "http://burghporter31415.x10host.com";
+    private final String RELATIVE_URL = "/Silent_Voyager/App_Scripts/add_coordinates.php";
 
     @SuppressLint("NewApi")
     @Override
@@ -21,11 +23,14 @@ public class BackgroundServiceBroadcast extends BroadcastReceiver {
         com.x10host.burghporter31415.fileactions.File file = new com.x10host.burghporter31415.fileactions.File(FILE_NAME);
 
         /*Read the stored credentials from the file*/
-        String[] results = file.readFile(context, FILE_NAME).split("\n");
+        String[] results = file.readFile(context).split("\n");
 
         intentService.putExtra("username", results[0].trim());
         intentService.putExtra("password", results[1].trim());
 
+        intentService.putExtra("BASE_URL", BASE_URL);
+        intentService.putExtra("RELATIVE_URL", RELATIVE_URL);
+        
         context.startForegroundService(intentService);
 
     }
