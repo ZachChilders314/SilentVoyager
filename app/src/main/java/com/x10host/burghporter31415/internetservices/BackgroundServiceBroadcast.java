@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import com.x10host.burghporter31415.fileactions.File;
@@ -30,8 +31,11 @@ public class BackgroundServiceBroadcast extends BroadcastReceiver {
 
         intentService.putExtra("BASE_URL", BASE_URL);
         intentService.putExtra("RELATIVE_URL", RELATIVE_URL);
-        
-        context.startForegroundService(intentService);
 
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intentService);
+        } else {
+            context.startService(intentService);
+        }
     }
 }

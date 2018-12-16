@@ -47,7 +47,7 @@ public class BackgroundUploadService extends Service {
     private Intent currentIntent = null;
 
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 60 * 2; //Retrieve the location every 2 minutes
+    private static final int LOCATION_INTERVAL = 2*60*1000; //Retrieve the location every 2 minutes
     private static final float LOCATION_DISTANCE = 30; //Minimum location difference should be 30 meters
 
     private final String[] columns = {"latitude", "longitude", "altitude", "city", "datestamp", "year", "month", "day","hour", "minute", "second"};
@@ -154,8 +154,6 @@ public class BackgroundUploadService extends Service {
 
                                     String[] values = { map.get("latitude"), map.get("longitude"),map.get("altitude"),map.get("city"),map.get("datestamp"),
                                                         map.get("year"),map.get("month"),map.get("day"),map.get("hour"),map.get("minute"),map.get("second")};
-
-                                    Log.i("com.x10host", values[0]);
 
                                     file.writeToFileSingleLine(getApplicationContext(), values);
 
