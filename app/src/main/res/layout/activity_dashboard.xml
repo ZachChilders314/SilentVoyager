@@ -33,12 +33,12 @@
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="City" />
+            android:text="Entry" />
 
-        <android.support.design.widget.TabItem
+        <!--<android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Coordinates" />
+            android:text="Coordinates" />-->
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
@@ -49,18 +49,42 @@
     </android.support.design.widget.TabLayout>
 
     <android.support.v4.view.ViewPager
+
         android:id="@+id/dashboardViewpager"
         android:layout_width="343dp"
-        android:layout_height="402dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/outline_dark_transparent"
+        app:layout_constraintBottom_toTopOf="@+id/btnFilterOptions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.645"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/dashboardTab"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btnFilterOptions"
+        android:layout_width="343dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/outline_dark_transparent"
+        android:text="Filter"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.636"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dashboardTab"
-        app:layout_constraintVertical_bias="0.905" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.982" />
+
+
 
 </android.support.constraint.ConstraintLayout>

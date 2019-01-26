@@ -17,28 +17,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.x10host.burghporter31415.silentvoyager.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.x10host.burghporter31415.silentvoyager.RegisterActivity" />
-        <activity android:name="com.x10host.burghporter31415.silentvoyager.LoginActivity" />
-        <activity android:name="com.x10host.burghporter31415.silentvoyager.Dashboard"></activity>
-        <service android:name="com.x10host.burghporter31415.internetservices.InternetPHPRequestService"></service>
-        <service android:name="com.x10host.burghporter31415.internetservices.BackgroundUploadService"></service>
-        <receiver android:name="com.x10host.burghporter31415.internetservices.BackgroundServiceBroadcast"
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".Dashboard" />
+
+        <service android:name="com.x10host.burghporter31415.internetservices.InternetPHPRequestService" />
+        <service android:name="com.x10host.burghporter31415.internetservices.BackgroundUploadService" />
+
+        <receiver
+            android:name="com.x10host.burghporter31415.internetservices.BackgroundServiceBroadcast"
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-            <intent-filter >
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="com.x10host.burghporter31415.internetservices.android.action.broadcast"/>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.x10host.burghporter31415.internetservices.android.action.broadcast" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".DashboardInfo" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCUx4bfecGJ_7_2Ekf_B8Dte67cTyHoKhg" />
+
+        <activity android:name=".Filter"></activity>
     </application>
 
 </manifest>

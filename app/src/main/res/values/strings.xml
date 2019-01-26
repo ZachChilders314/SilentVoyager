@@ -3,7 +3,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="category_city">City</string>
+    <string name="category_entry">Entry</string>
     <string name="category_coordinates">Coordinates</string>
     <string name="category_map">Map</string>
 </resources>

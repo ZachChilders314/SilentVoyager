@@ -120,7 +120,7 @@ public class BackgroundUploadService extends Service {
 
                                             int i = 0;
                                             for(String key : columns) {
-                                                connection.addPair(key, data[i++]);
+                                                connection.addPair(key, data[i++]); //TODO UPDATE POST Request Variables
                                             }
 
                                             result = connection.submitPost(page, MethodType.POST);
@@ -141,6 +141,7 @@ public class BackgroundUploadService extends Service {
                                 connection.addPair(columns[3], cityName);
                                 connection.addPair(columns[4], dateStamp);
 
+                                /*This will be legacy code, i'm keeping it just for functionality*/
                                 connection.addPair(columns[5], currentDateAndTime[0]);
                                 connection.addPair(columns[6], currentDateAndTime[1]);
                                 connection.addPair(columns[7], currentDateAndTime[2]);
@@ -154,6 +155,8 @@ public class BackgroundUploadService extends Service {
 
                                     String[] values = { map.get("latitude"), map.get("longitude"),map.get("altitude"),map.get("city"),map.get("datestamp"),
                                                         map.get("year"),map.get("month"),map.get("day"),map.get("hour"),map.get("minute"),map.get("second")};
+
+                                    /*String[] values = { map.get("latitude"), map.get("longitude"), map.get("altitude"), map.get("city"), map.get("datestamp") }; */ //TODO
 
                                     file.writeToFileSingleLine(getApplicationContext(), values);
 
@@ -246,7 +249,7 @@ public class BackgroundUploadService extends Service {
         thread.start();
 
         /*If interrupted by the system, restart the service. Perhaps I could just use a Foreground service?*/
-        return Service.START_STICKY;
+        return Service.START_REDELIVER_INTENT; //TODO TEST
 
     }
 

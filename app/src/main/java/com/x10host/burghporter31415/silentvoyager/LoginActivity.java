@@ -98,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 intent.putExtra("username", data.getStringExtra("username"));
                 intent.putExtra("password", data.getStringExtra("password"));
+                intent.putExtra("PATH", this.PATH);
 
                 startActivity(intent);
 

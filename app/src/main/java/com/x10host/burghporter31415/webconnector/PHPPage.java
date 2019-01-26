@@ -17,6 +17,11 @@ public class PHPPage {
         this.relative = relative;
     }
 
+    public PHPPage(String url) {
+        this.base = url;
+        this.relative="";
+    }
+
     public String getURL() {
         return (this.base + this.relative);
     }
@@ -24,6 +29,11 @@ public class PHPPage {
     public void setURL(String base, String relative) {
         this.base = base;
         this.relative = relative;
+    }
+
+    public void setURL(String url) {
+        this.base = url;
+        this.relative="";
     }
 
 }

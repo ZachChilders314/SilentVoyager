@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.x10host.burghporter31415.silentvoyager.R;
 
-public class CoordinatesFragment extends Fragment {
+public class CoordinatesFragment extends Fragment implements Broadcastable {
 
     public CoordinatesFragment() {
 
@@ -20,5 +20,10 @@ public class CoordinatesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_coordinates, container, false);
         return rootView;
+    }
+
+    @Override
+    public void broadcastData(Bundle data) {
+        //TODO
     }
 }

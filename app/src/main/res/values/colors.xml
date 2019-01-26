@@ -36,7 +36,7 @@
 
     <color name="outlineDarkStart">#000000</color>
     <color name="outlineDarkEnd">#000000</color>
-    <color name="outlineDarkBorder">#FFFFFF</color>
+    <color name="outlineDarkBorder">#ffffff</color>
 
     <color name="outlineDarkFocusedStart">#000000</color>
     <color name="outlineDarkFocusedEnd">#000000</color>
