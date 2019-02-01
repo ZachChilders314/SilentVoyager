@@ -36,6 +36,11 @@ public class Dashboard extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(getApplicationContext(), Filter.class);
+
+                /*Need the username for the Filter activity to query the database for common users*/
+                intent.putExtra("username", getIntent().getExtras().getString("username"));
+                intent.putExtra("password", getIntent().getExtras().getString("password"));
+
                 startActivityForResult(intent, 1);
 
             }

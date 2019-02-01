@@ -173,7 +173,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:alpha=".7"
-        android:background="@drawable/outline_dark"
+        android:background="@drawable/outline_dark_transparent"
         android:editable="false"
         android:ems="10"
         android:enabled="false"
@@ -255,7 +255,7 @@
         app:layout_constraintVertical_bias="0.202" />
 
     <Spinner
-        android:id="@+id/txtLatitude"
+        android:id="@+id/spinnerMaxEntries"
         android:layout_width="225dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
