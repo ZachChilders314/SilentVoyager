@@ -153,16 +153,16 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="End Date"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txtName"
         app:layout_constraintHorizontal_bias="0.771"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="#FFFFFF"
-        app:layout_constraintVertical_bias="0.463" />
+        app:layout_constraintVertical_bias="0.521" />
 
-    <DatePicker
+    <Button
         android:id="@+id/pickerEndDate"
         android:layout_width="225dp"
         android:layout_height="40dp"
@@ -173,11 +173,9 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:alpha=".7"
-        android:background="@drawable/outline_dark_transparent"
-        android:editable="false"
+        android:background="@drawable/outline_dark"
         android:ems="10"
-        android:enabled="false"
-        android:hint="Altitude"
+        android:hint="Select End Date"
         android:inputType="textCapWords"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
@@ -186,7 +184,7 @@
         app:layout_constraintHorizontal_bias="0.874"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.463" />
+        app:layout_constraintVertical_bias="0.534" />
 
     <TextView
         android:id="@+id/lblStartDate"
@@ -199,16 +197,16 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="Start Date"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txtName"
         app:layout_constraintHorizontal_bias="0.771"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="#FFFFFF"
-        app:layout_constraintVertical_bias="0.334" />
+        app:layout_constraintVertical_bias="0.395" />
 
-    <DatePicker
+    <Button
         android:id="@+id/pickerStartDate"
         android:layout_width="225dp"
         android:layout_height="40dp"
@@ -222,8 +220,7 @@
         android:background="@drawable/outline_dark"
         android:editable="false"
         android:ems="10"
-        android:enabled="false"
-        android:hint="Start Date"
+        android:hint="Select Start Date"
         android:inputType="textCapWords"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
@@ -232,7 +229,7 @@
         app:layout_constraintHorizontal_bias="0.874"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.329" />
+        app:layout_constraintVertical_bias="0.391" />
 
     <TextView
         android:id="@+id/lblMaxEntries"
@@ -245,14 +242,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="Max Entries"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txtName"
         app:layout_constraintHorizontal_bias="0.771"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="#FFFFFF"
-        app:layout_constraintVertical_bias="0.202" />
+        app:layout_constraintVertical_bias="0.265" />
 
     <Spinner
         android:id="@+id/spinnerMaxEntries"
@@ -271,6 +268,7 @@
         android:enabled="false"
         android:hint="Max Entries"
         android:inputType="textCapWords"
+        android:spinnerMode="dropdown"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -278,11 +276,10 @@
         app:layout_constraintHorizontal_bias="0.874"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.193"
-        android:spinnerMode="dropdown" />
+        app:layout_constraintVertical_bias="0.257" />
 
     <Button
-        android:id="@+id/btnReturn"
+        android:id="@+id/btnFilterSave"
         android:layout_width="300dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
@@ -292,13 +289,13 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/outline_dark_transparent"
-        android:text="Return"
+        android:text="Save"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.933" />
+        app:layout_constraintVertical_bias="0.982" />
 
 
     <Spinner
@@ -318,6 +315,7 @@
         android:enabled="false"
         android:hint="Name"
         android:inputType="textCapWords"
+        android:spinnerMode="dropdown"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -325,8 +323,7 @@
         app:layout_constraintHorizontal_bias="0.874"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05"
-        android:spinnerMode="dropdown" />
+        app:layout_constraintVertical_bias="0.105" />
 
 
     <TextView
@@ -340,14 +337,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="Username"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txtName"
         app:layout_constraintHorizontal_bias="0.771"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="#FFFFFF"
-        app:layout_constraintVertical_bias="0.065" />
+        app:layout_constraintVertical_bias="0.134" />
 
 
 </android.support.constraint.ConstraintLayout>

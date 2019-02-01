@@ -7,25 +7,38 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.x10host.burghporter31415.TimePicker.DateUtil;
 import com.x10host.burghporter31415.TimePicker.DialogDateFragment;
 import com.x10host.burghporter31415.TimePicker.DialogTimeFragment;
+import com.x10host.burghporter31415.fragments.FragmentUtils;
 
 //https://stackoverflow.com/questions/14292398/how-to-pass-data-from-2nd-activity-to-1st-activity-when-pressed-back-android NEED THIS
 
 public class Filter extends AppCompatActivity {
 
-    final DialogFragment dateFragmentStart = new DialogDateFragment();
-    final DialogFragment timeFragmentStart = new DialogTimeFragment();
+    final private DialogFragment dateFragmentStart = new DialogDateFragment();
+    final private DialogFragment timeFragmentStart = new DialogTimeFragment();
 
-    final DialogFragment dateFragmentEnd = new DialogDateFragment();
-    final DialogFragment timeFragmentEnd = new DialogTimeFragment();
+    final private DialogFragment dateFragmentEnd = new DialogDateFragment();
+    final private DialogFragment timeFragmentEnd = new DialogTimeFragment();
+
+    private Button pickerStartDate;
+    private Button pickerEndDate;
+
+    /*This will contain Username, Max Entries, Start Date, End Date*/
+    private Intent dataIntent = new Intent();
+
+    DateUtil startDate = new DateUtil();
+    DateUtil endDate = new DateUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +50,8 @@ public class Filter extends AppCompatActivity {
         String[] arr2 = {"10", "25", "100", "1000"};
 
         /*All Preliminary Stuff to set up Spinners*/
-        Spinner spinnerName = (Spinner) findViewById(R.id.spinnerName);
-        Spinner spinnerMaxEntries = (Spinner) findViewById(R.id.spinnerMaxEntries);
+        final Spinner spinnerName = (Spinner) findViewById(R.id.spinnerName);
+        final Spinner spinnerMaxEntries = (Spinner) findViewById(R.id.spinnerMaxEntries);
 
         ArrayAdapter<String> adapterName = new ArrayAdapter<String>(this,
                                 android.R.layout.simple_spinner_dropdown_item, arr);
@@ -58,6 +71,7 @@ public class Filter extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+                ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
             }
 
             @Override
@@ -70,6 +84,7 @@ public class Filter extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+                ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
             }
 
             @Override
@@ -78,8 +93,8 @@ public class Filter extends AppCompatActivity {
         });
 
         /*Preliminary stuff for the Datepickers*/
-        DatePicker pickerStartDate = (DatePicker) findViewById(R.id.pickerStartDate);
-        DatePicker pickerEndDate = (DatePicker) findViewById(R.id.pickerEndDate);
+        this.pickerStartDate = (Button) findViewById(R.id.pickerStartDate);
+        this.pickerEndDate = (Button) findViewById(R.id.pickerEndDate);
 
         /*Date and Time Picker fragments used when the user 'clicks' the startdate and enddate datepicker widgets*/
         PendingIntent pendingIntent = createPendingResult(100, new Intent(), 0);
@@ -142,8 +157,6 @@ public class Filter extends AppCompatActivity {
                     thread.start();
                     thread.join();
 
-                    //timeFragment.show(getSupportFragmentManager(), "timePicker");
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -152,21 +165,57 @@ public class Filter extends AppCompatActivity {
 
         });
 
+        /*Preliminary Stuff for Save Button*/
+        Button btnFilterSave = (Button) findViewById(R.id.btnFilterSave);
+
+        btnFilterSave.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //Pass Bundle to Activity for Result (I.E. Dashboard Script)
+                dataIntent.putExtra("usernameSelection", spinnerName.getSelectedItem().toString());
+                dataIntent.putExtra("maxEntriesSelection", spinnerMaxEntries.getSelectedItem().toString());
+                setResult(1, dataIntent);
+                finish();
+            }
+        });
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         /*Handle the pending intent based off of the code that was unique to Start Date and End Date Widget*/
+        Bundle bundle = data.getExtras(); //Would have d1, d2, d3 parameters
+
         switch(resultCode) {
-            case 100: timeFragmentStart.show(getSupportFragmentManager(), "timePicker");
+
+            case 100:
+
+                this.startDate.setDate(bundle.getInt("d1"), bundle.getInt("d2"), bundle.getInt("d3"));
+                timeFragmentStart.show(getSupportFragmentManager(), "timePicker");
                 break;
-            case 200: Log.i("com.x10host", resultCode + "");
+
+            case 200:
+
+                this.startDate.setTime(bundle.getInt("d1"), bundle.getInt("d2"));
+                this.dataIntent.putExtra("startDate", this.startDate.toString());
+                this.pickerStartDate.setText(FragmentUtils.returnDateStamp(this.startDate.toString().split("_"), false));
                 break;
-            case 300: timeFragmentEnd.show(getSupportFragmentManager(), "timePicker");
+
+            case 300:
+
+                this.endDate.setDate(bundle.getInt("d1"), bundle.getInt("d2"), bundle.getInt("d3"));
+                timeFragmentEnd.show(getSupportFragmentManager(), "timePicker");
                 break;
-            case 400: Log.i("com.x10host", resultCode + "");
+
+            case 400:
+
+                this.endDate.setTime(bundle.getInt("d1"), bundle.getInt("d2"));
+                this.dataIntent.putExtra("endDate", this.endDate.toString());
+                this.pickerEndDate.setText(FragmentUtils.returnDateStamp(this.endDate.toString().split("_"), false));
                 break;
+
             default:
                 break;
         }

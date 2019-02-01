@@ -44,7 +44,15 @@ public class DialogTimeFragment extends DialogFragment
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
         try {
-            pendingIntent.send(getContext(), this.code, new Intent());
+
+            Intent intent = new Intent();
+
+            /*D1, D2 are the data parameters being sent back*/
+            intent.putExtra("d1", hourOfDay);
+            intent.putExtra("d2", minute);
+
+            pendingIntent.send(getContext(), this.code, intent);
+
         } catch (PendingIntent.CanceledException e) {
             e.printStackTrace();
         }

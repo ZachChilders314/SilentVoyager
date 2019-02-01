@@ -48,7 +48,7 @@ public class EntryFragment extends Fragment {
             String[] dateStampArr = arr[i].split(",")[5]
                                             .split("_"); /*Username, Lat, Long, Altitude, City, DateStamp --> YEAR_MONTH_DAY_HOUR_MINUTE_SECOND*/
 
-            listItems.add(FragmentUtils.returnDateStamp(dateStampArr));
+            listItems.add(FragmentUtils.returnDateStamp(dateStampArr, true));
         }
 
         adapter = new ArrayAdapter<String>(getContext(), R.layout.text_view_list, listItems);

@@ -36,7 +36,7 @@ public class DashboardInfo extends AppCompatActivity {
         String longitude = bundle.getString("longitude");
         String altitude = bundle.getString("altitude");
         String city = bundle.getString("city");
-        String datestamp = FragmentUtils.returnDateStamp(bundle.getString("datestamp").split("_"));
+        String datestamp = FragmentUtils.returnDateStamp(bundle.getString("datestamp").split("_"), true);
 
         Toast.makeText(this, datestamp,Toast.LENGTH_LONG).show();
 

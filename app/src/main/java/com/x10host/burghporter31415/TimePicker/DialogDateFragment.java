@@ -40,7 +40,15 @@ public class DialogDateFragment extends DialogFragment
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         try {
-            pendingIntent.send(getContext(), this.code, new Intent());
+            Intent intent = new Intent();
+
+            /*D1, D2, D3 are the data parameters being sent back*/
+            intent.putExtra("d1", year);
+            intent.putExtra("d2", month);
+            intent.putExtra("d3", dayOfMonth);
+
+            pendingIntent.send(getContext(), this.code, intent);
+
         } catch (PendingIntent.CanceledException e) {
             e.printStackTrace();
         }
