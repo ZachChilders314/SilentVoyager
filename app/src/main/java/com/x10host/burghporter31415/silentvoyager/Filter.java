@@ -175,7 +175,7 @@ public class Filter extends AppCompatActivity {
                 //Pass Bundle to Activity for Result (I.E. Dashboard Script)
                 dataIntent.putExtra("usernameSelection", spinnerName.getSelectedItem().toString());
                 dataIntent.putExtra("maxEntriesSelection", spinnerMaxEntries.getSelectedItem().toString());
-                setResult(1, dataIntent);
+                setResult(200, dataIntent);
                 finish();
             }
         });

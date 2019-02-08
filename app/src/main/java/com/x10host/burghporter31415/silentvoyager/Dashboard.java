@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ public class Dashboard extends AppCompatActivity {
                 intent.putExtra("username", getIntent().getExtras().getString("username"));
                 intent.putExtra("password", getIntent().getExtras().getString("password"));
 
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, 100);
 
             }
         });
@@ -155,9 +156,20 @@ public class Dashboard extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+
+        /*The request and result codes need to be set accordingly in the activities*/
         if (requestCode == 100 && resultCode==200) {
 
-            //HANDLE RECEIVED DATA FROM SAVED ACTIVITY
+            /*Parse the Data Passed (usernameSelection, maxEntriesSelection, startDate, endDate)*/
+            Bundle savedBundle = data.getExtras();
+
+            String username = savedBundle.getString("usernameSelection");
+            String maxEntries = savedBundle.getString("maxEntriesSelection");
+
+            String startDate = savedBundle.getString("startDate");
+            String endDate = savedBundle.getString("endDate");
+
+            Log.i("com.x10host", username + ", " + maxEntries + ", " + startDate + ", " + endDate);
 
         }
 
