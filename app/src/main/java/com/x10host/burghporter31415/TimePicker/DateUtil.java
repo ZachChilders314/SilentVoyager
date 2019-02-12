@@ -55,8 +55,12 @@ public class DateUtil implements Serializable {
     public int getMinute() {return this.minute;}
 
     public String toString() {
-        return this.year + "_" + this.month + "_" + this.dayOfMonth
-                            + "_" + this.hourOfDay + "_" + this.minute + "_" + "00";
+        return convertDoubleDigit(this.year) + "_" + convertDoubleDigit(this.month) + "_" + convertDoubleDigit(this.dayOfMonth)
+                            + "_" + convertDoubleDigit(this.hourOfDay) + "_" + convertDoubleDigit(this.minute) + "_" + "00";
+    }
+
+    private String convertDoubleDigit(int num) {
+        return (num < 10 ? "0" + num : "" + num);
     }
 
 }

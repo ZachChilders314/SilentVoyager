@@ -41,7 +41,7 @@ public class EntryFragment extends Fragment {
 
         ArrayList<String> listItems = new ArrayList<String>();
 
-        if(arr[0].isEmpty()) { return rootView; }
+        if(arr.length == 0 || arr[0].isEmpty()) {return rootView; }
 
         for(int i = 0; i < arr.length; i++) {
             /*Unfold to get Date Format Displayed*/

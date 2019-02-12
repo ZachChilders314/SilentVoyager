@@ -192,7 +192,7 @@ public class Filter extends AppCompatActivity {
 
             case 100:
 
-                this.startDate.setDate(bundle.getInt("d1"), bundle.getInt("d2"), bundle.getInt("d3"));
+                this.startDate.setDate(bundle.getInt("d1"), bundle.getInt("d2") + 1, bundle.getInt("d3"));
                 timeFragmentStart.show(getSupportFragmentManager(), "timePicker");
                 break;
 
@@ -205,7 +205,7 @@ public class Filter extends AppCompatActivity {
 
             case 300:
 
-                this.endDate.setDate(bundle.getInt("d1"), bundle.getInt("d2"), bundle.getInt("d3"));
+                this.endDate.setDate(bundle.getInt("d1"), bundle.getInt("d2") + 1, bundle.getInt("d3"));
                 timeFragmentEnd.show(getSupportFragmentManager(), "timePicker");
                 break;
 

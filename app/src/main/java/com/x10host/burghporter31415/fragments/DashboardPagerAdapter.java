@@ -70,6 +70,11 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
         }
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
     public void setData(String[] newData) {
         this.bundle.putStringArray("arr", newData);
     }

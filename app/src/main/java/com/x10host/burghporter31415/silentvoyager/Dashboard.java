@@ -16,6 +16,8 @@ import com.x10host.burghporter31415.webconnector.FormPost;
 import com.x10host.burghporter31415.webconnector.MethodType;
 import com.x10host.burghporter31415.webconnector.PHPPage;
 
+import java.util.ArrayList;
+
 public class Dashboard extends AppCompatActivity {
 
     private ViewPager viewPager;
@@ -23,6 +25,10 @@ public class Dashboard extends AppCompatActivity {
     private Button btnFilterOptions;
 
     private final String FILE_NAME="Silent_Voyager_Credentials.txt";
+    private String[] arrResults = null;
+
+    final FormPost<String, String> resultFormPost = new FormPost<>();
+    final PHPPage resultRequestPage = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/get_results.php");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +89,6 @@ public class Dashboard extends AppCompatActivity {
         sendBroadcast(broadcast);
 
         /*The Dashboard should be the handler of the city, coordinates, and map fragment data*/
-        final PHPPage resultRequestPage = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/get_results.php");
-
-        final FormPost<String, String> resultFormPost = new FormPost<>();
         resultFormPost.addPair("username", getIntent().getExtras().getString("username"));
         resultFormPost.addPair("password", getIntent().getExtras().getString("password"));
 
@@ -95,9 +98,9 @@ public class Dashboard extends AppCompatActivity {
 
                 @Override
                 public void run() {
-                    String result = resultFormPost.submitPost(resultRequestPage, MethodType.POST);
-                    String[] arr = result.split("\n"); //Row contains: Username, lat, long, alt, City, Datestamp
-                    populateComponents(arr);
+                    String[] result = resultFormPost.submitPost(resultRequestPage, MethodType.POST).split("\n");
+                    updateResultSet(result);
+                    populateComponents(result);
                 }
             });
 
@@ -111,9 +114,10 @@ public class Dashboard extends AppCompatActivity {
     }
 
     /*Callback function after results have been returned for current user*/
-    private void populateComponents(final String[] arr) {
+    private void populateComponents(final String[] results) {
 
-        adapter.setData(arr);
+        Log.i("com.x10host", "" + results.length);
+        adapter.setData(results);
         adapter.notifyDataSetChanged();
 
         //try {
@@ -153,6 +157,10 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
+    private void updateResultSet(String[] arrResults) {
+        this.arrResults = arrResults;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -163,13 +171,41 @@ public class Dashboard extends AppCompatActivity {
             /*Parse the Data Passed (usernameSelection, maxEntriesSelection, startDate, endDate)*/
             Bundle savedBundle = data.getExtras();
 
-            String username = savedBundle.getString("usernameSelection");
-            String maxEntries = savedBundle.getString("maxEntriesSelection");
+            final String username = savedBundle.getString("usernameSelection");
+            final String maxEntries = savedBundle.getString("maxEntriesSelection");
 
-            String startDate = savedBundle.getString("startDate");
-            String endDate = savedBundle.getString("endDate");
+            final String startDate = savedBundle.getString("startDate");
+            final String endDate = savedBundle.getString("endDate");
 
             Log.i("com.x10host", username + ", " + maxEntries + ", " + startDate + ", " + endDate);
+
+            /******************************************DONE IN THREAD AND THREAD MAIN**********************************************/
+
+            final String[] arrResults = this.arrResults;
+
+            Thread thread = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    final FilterUtils utils = new FilterUtils(username, Integer.parseInt(maxEntries), startDate, endDate);
+
+                    runOnUiThread(new Runnable(){
+                        @Override
+                        public void run() {
+                            populateComponents(utils.getArrResult(arrResults));
+                        }
+                    });
+
+                }
+            });
+
+            try {
+                thread.start();
+                thread.join(); /*Wait for the thread to finish, and then create executor service to split tasks*/
+            } catch (InterruptedException e) {}
+
+            /**********************************************************************************************************************/
 
         }
 
@@ -177,5 +213,70 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
+    private class FilterUtils {
+
+        private String username;
+        private int maxEntries;
+        private String beginDate;
+        private String endDate;
+
+        public FilterUtils(String username, int maxEntries, String beginDate, String endDate) {
+            this.username = username;
+            this.maxEntries = maxEntries;
+            this.beginDate = beginDate;
+            this.endDate = endDate;
+        }
+
+        public FilterUtils() {}
+
+        public void setUsername(String username) {this.username = username;}
+        public void setMaxEntries(int maxEntries) {this.maxEntries = maxEntries;}
+        public void setBeginDate(String beginDate) {this.beginDate = beginDate;}
+        public void setEndDate(String endDate) {this.endDate = endDate;}
+
+        public String getUsername() {return this.username;}
+        public int getMaxEntries() {return this.maxEntries;}
+        public String getBeginDate() {return this.beginDate;}
+        public String getEndDate() {return this.endDate;}
+
+        public boolean isValidEntry(Pair pair) {
+
+            return (this.username.equals(pair.username)
+                   && (this.beginDate.compareTo(pair.date) < 0)
+                   && (this.endDate.compareTo(pair.date) > 0));
+        }
+
+        public String[] getArrResult(String[] arr) {
+            //Row contains: Username, lat, long, alt, City, Datestamp
+            ArrayList<String> list = new ArrayList<String>();
+
+            int itemPosNum = 0;
+            for(int i = 0; i < arr.length && itemPosNum < this.maxEntries; i++) {
+
+                String[] items = arr[i].split(",");
+
+                if(isValidEntry(new Pair(items[0], items[5]))) {
+                    list.add(arr[i]);
+                    itemPosNum++;
+                }
+
+            }
+            String[] arrElems = new String[list.size()];
+            return list.toArray(arrElems);
+        }
+
+
+        private class Pair {
+            private String username;
+            private String date;
+
+            public Pair(String username, String date) {
+                this.username = username;
+                this.date = date;
+            }
+
+        }
+
+    }
 
 }

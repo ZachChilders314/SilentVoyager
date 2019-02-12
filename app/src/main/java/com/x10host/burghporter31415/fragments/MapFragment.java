@@ -60,6 +60,8 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
         map = googleMap;
         map.getUiSettings().setMyLocationButtonEnabled(false);
 
+        if(arr.length == 0) {return; }
+
         String[] currentCoords = this.arr[0].split(",");
         LatLng coords = new LatLng(Double.parseDouble(currentCoords[1]), Double.parseDouble(currentCoords[2]));
         map.setMyLocationEnabled(true); //Already check the necessary permissions on login
@@ -68,7 +70,7 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
         /*POLYLINES*/
         PolygonOptions rectOptions = new PolygonOptions();
 
-        for(int i = 0; i < 50; i++) {
+        for(int i = 0; i < (Math.min(50, this.arr.length)); i++) {
             String[] components = this.arr[i].split(",");
             rectOptions.add(new LatLng(Double.parseDouble(components[1]),
                                         Double.parseDouble(components[2])));
