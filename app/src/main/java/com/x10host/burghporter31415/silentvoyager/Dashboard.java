@@ -1,6 +1,7 @@
 package com.x10host.burghporter31415.silentvoyager;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.x10host.burghporter31415.fragments.DashboardPagerAdapter;
 import com.x10host.burghporter31415.internetservices.BackgroundServiceBroadcast;
@@ -19,6 +21,8 @@ import com.x10host.burghporter31415.webconnector.PHPPage;
 import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
+
+    private VideoView introVideoView;
 
     private ViewPager viewPager;
     private DashboardPagerAdapter adapter;
@@ -36,6 +40,19 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        introVideoView = (VideoView) findViewById(R.id.introVideoView);
+
+        introVideoView.setVideoPath(getIntent().getExtras().getString("PATH"));
+        introVideoView.requestFocus();
+        introVideoView.start();
+
+        introVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+
         btnFilterOptions = (Button) findViewById(R.id.btnFilterOptions);
 
         btnFilterOptions.setOnClickListener(new View.OnClickListener(){
@@ -47,6 +64,8 @@ public class Dashboard extends AppCompatActivity {
                 /*Need the username for the Filter activity to query the database for common users*/
                 intent.putExtra("username", getIntent().getExtras().getString("username"));
                 intent.putExtra("password", getIntent().getExtras().getString("password"));
+
+                intent.putExtra("PATH", getIntent().getExtras().getString("PATH"));
 
                 startActivityForResult(intent, 100);
 
@@ -116,7 +135,6 @@ public class Dashboard extends AppCompatActivity {
     /*Callback function after results have been returned for current user*/
     private void populateComponents(final String[] results) {
 
-        Log.i("com.x10host", "" + results.length);
         adapter.setData(results);
         adapter.notifyDataSetChanged();
 
@@ -164,7 +182,6 @@ public class Dashboard extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-
         /*The request and result codes need to be set accordingly in the activities*/
         if (requestCode == 100 && resultCode==200) {
 
@@ -176,8 +193,6 @@ public class Dashboard extends AppCompatActivity {
 
             final String startDate = savedBundle.getString("startDate");
             final String endDate = savedBundle.getString("endDate");
-
-            Log.i("com.x10host", username + ", " + maxEntries + ", " + startDate + ", " + endDate);
 
             /******************************************DONE IN THREAD AND THREAD MAIN**********************************************/
 
@@ -241,9 +256,12 @@ public class Dashboard extends AppCompatActivity {
 
         public boolean isValidEntry(Pair pair) {
 
+            if(this.beginDate == null || this.endDate == null) {return false;}
+
             return (this.username.equals(pair.username)
                    && (this.beginDate.compareTo(pair.date) < 0)
                    && (this.endDate.compareTo(pair.date) > 0));
+
         }
 
         public String[] getArrResult(String[] arr) {

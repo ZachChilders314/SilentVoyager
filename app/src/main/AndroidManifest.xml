@@ -49,7 +49,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCUx4bfecGJ_7_2Ekf_B8Dte67cTyHoKhg" />
 
-        <activity android:name=".Filter"></activity>
+        <activity android:name=".Filter" />
+        <activity android:name="com.x10host.burghporter31415.fragments.ConnectionsFragment" />
+        <activity android:name=".ConnectionSelected"></activity>
     </application>
 
 </manifest>

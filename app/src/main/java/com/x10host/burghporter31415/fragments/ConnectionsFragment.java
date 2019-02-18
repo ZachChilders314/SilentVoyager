@@ -9,7 +9,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.x10host.burghporter31415.silentvoyager.ConnectionSelected;
+import com.x10host.burghporter31415.silentvoyager.Dashboard;
 import com.x10host.burghporter31415.silentvoyager.DashboardInfo;
+import com.x10host.burghporter31415.silentvoyager.Filter;
 import com.x10host.burghporter31415.silentvoyager.R;
 
 import java.util.ArrayList;
@@ -23,37 +26,33 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 
-public class EntryFragment extends Fragment {
+public class ConnectionsFragment extends Fragment {
 
 
     private ArrayAdapter<String> adapter;
 
-    public EntryFragment() {
+    public ConnectionsFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_entry, container, false);
+
+        View rootView = inflater.inflate(R.layout.fragment_connections, container, false);
 
         final Bundle bundle = this.getArguments();
-        String[] arr = bundle.getStringArray("arr");
+        //String[] arr = bundle.getStringArray("arr");
+        String[] arr = {"Joe (@joe232)", "Bradley (@bRad432)", "Lisa (@lPasta489)"}; //TEST DATA
 
         ArrayList<String> listItems = new ArrayList<String>();
 
         if(arr.length == 0 || arr[0].isEmpty()) {return rootView; }
 
-        for(int i = 0; i < arr.length; i++) {
-            /*Unfold to get Date Format Displayed*/
-            String[] dateStampArr = arr[i].split(",")[5]
-                                            .split("_"); /*Username, Lat, Long, Altitude, City, DateStamp --> YEAR_MONTH_DAY_HOUR_MINUTE_SECOND*/
-
-            listItems.add(FragmentUtils.returnDateStamp(dateStampArr, true));
-        }
+        for(int i = 0; i < arr.length; i++) { listItems.add(arr[i].trim()); }
 
         adapter = new ArrayAdapter<String>(getContext(), R.layout.text_view_list, listItems);
 
-        ListView listView = (ListView)rootView.findViewById(R.id.list_view_entry);
+        ListView listView = (ListView)rootView.findViewById(R.id.list_view_connections);
         listView.setAdapter(adapter);
 
         final String[] arr2 = arr; //We need a FINAL string array for the onclick listener--it cannot have a changed state.
@@ -64,16 +63,24 @@ public class EntryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String[] rowElements = arr2[(int)id].split(",");
+                String connectionName = arr2[(int)id].substring(
+                        0,
+                        arr2[(int)id].indexOf("(@")
+                );
 
-                Intent intent = new Intent(getContext(), DashboardInfo.class);
+                String connectionUsername = arr2[(int)id].substring(
+                        arr2[(int)id].indexOf("(@") + 2,
+                        arr2[(int)id].indexOf(")")
+                );
 
-                intent.putExtra("username", rowElements[0]);
-                intent.putExtra("latitude", rowElements[1]);
-                intent.putExtra("longitude", rowElements[2]);
-                intent.putExtra("altitude", rowElements[3]);
-                intent.putExtra("city", rowElements[4]);
-                intent.putExtra("datestamp", rowElements[5]);
+                Intent intent = new Intent(getContext(), ConnectionSelected.class);
+
+                intent.putExtra("connectionName", connectionName);
+                intent.putExtra("connectionUsername", connectionUsername);
+
+                intent.putExtra("username", bundle.getString("username"));
+                intent.putExtra("password", bundle.getString("password"));
+
                 intent.putExtra("PATH", bundle.getString("PATH"));
 
                 startActivity(intent);

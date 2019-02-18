@@ -49,6 +49,7 @@
     <color name="outlineDarkTransparentStart">@android:color/transparent</color>
     <color name="outlineDarkTransparentEnd">@android:color/transparent</color>
     <color name="outlineDarkTransparentBorder">#FFFFFF</color>
+    <color name="outlineDarkTransparentBorderRed">#a30911</color>
 
     <color name="outlineDarkTransparentFocusedStart">@android:color/transparent</color>
     <color name="outlineDarkTransparentFocusedEnd">@android:color/transparent</color>

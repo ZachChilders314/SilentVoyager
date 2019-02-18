@@ -19,6 +19,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.x10host.burghporter31415.silentvoyager.R;
@@ -74,11 +76,22 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
             String[] components = this.arr[i].split(",");
             rectOptions.add(new LatLng(Double.parseDouble(components[1]),
                                         Double.parseDouble(components[2])));
+
+            Marker marker = map.addMarker(new MarkerOptions()
+            .position(new LatLng(Double.parseDouble(components[1]), Double.parseDouble(components[2])))
+            .title(i == 0 ? "Last Position" : i == this.arr.length - 1 ? "Start Position" : "Position: "
+                    + (this.arr.length - i)));
+
+            if(i == 0) {marker.showInfoWindow();}
+
+
         }
 
         Polygon polygon = map.addPolygon(rectOptions);
         polygon.setStrokeColor(Color.parseColor("#0099ff"));
+
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(coords, (float)18.0));
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
     }
 

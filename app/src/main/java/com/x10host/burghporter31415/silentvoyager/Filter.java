@@ -3,6 +3,7 @@ package com.x10host.burghporter31415.silentvoyager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.x10host.burghporter31415.TimePicker.DateUtil;
 import com.x10host.burghporter31415.TimePicker.DialogDateFragment;
@@ -24,6 +26,8 @@ import com.x10host.burghporter31415.fragments.FragmentUtils;
 //https://stackoverflow.com/questions/14292398/how-to-pass-data-from-2nd-activity-to-1st-activity-when-pressed-back-android NEED THIS
 
 public class Filter extends AppCompatActivity {
+
+    private VideoView introVideoView;
 
     final private DialogFragment dateFragmentStart = new DialogDateFragment();
     final private DialogFragment timeFragmentStart = new DialogTimeFragment();
@@ -42,8 +46,22 @@ public class Filter extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
+
+        introVideoView = (VideoView) findViewById(R.id.introVideoView);
+
+        introVideoView.setVideoPath(getIntent().getExtras().getString("PATH"));
+        introVideoView.requestFocus();
+        introVideoView.start();
+
+        introVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
 
         /*Set the adapters first -- I will need to make a PHP request to get all usernames associated with current*/
         String[] arr = {getIntent().getExtras().getString("username")}; //Temporary Provision

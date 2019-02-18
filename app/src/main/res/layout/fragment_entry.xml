@@ -8,9 +8,10 @@
     <!-- TODO: Update blank fragment layout -->
 
     <ListView
-        android:id="@+id/list_view_city"
+        android:id="@+id/list_view_entry"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF" />
+        android:dividerHeight="10.0dp"
+        android:background="@drawable/outline_dark_transparent_no_border" />
 
 </FrameLayout>

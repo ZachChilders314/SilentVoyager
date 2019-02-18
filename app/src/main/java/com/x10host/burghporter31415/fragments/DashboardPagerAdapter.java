@@ -32,14 +32,14 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
 
             return entryFragment;
 
-        }/* else if(i == 1) {
+        } else if(i == 1) {
 
-            CoordinatesFragment coordinatesFragment = new CoordinatesFragment();
-            coordinatesFragment.setArguments(this.bundle);
+            ConnectionsFragment connectionsFragment = new ConnectionsFragment();
+            connectionsFragment.setArguments(this.bundle);
 
-            return coordinatesFragment;
+            return connectionsFragment;
 
-        } */else {
+        } else {
 
             MapFragment mapFragment = new MapFragment();
             mapFragment.setArguments(this.bundle);
@@ -52,7 +52,7 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
 
     @Override
     public int getCount() {
-        return 2; //Number of tabs
+        return 3; //Number of tabs
     }
 
     @Override
@@ -61,9 +61,9 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
             case 0:
                 return mContext.getString(R.string.category_entry);
             case 1:
+                return mContext.getString(R.string.category_connections);
+            case 2:
                 return mContext.getString(R.string.category_map);
-            /*case 2:
-                return mContext.getString(R.string.category_map);*/
             default:
                 return null;
 
