@@ -118,4 +118,11 @@ public class ConnectionSelected extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        introVideoView.start();
+    }
+
 }

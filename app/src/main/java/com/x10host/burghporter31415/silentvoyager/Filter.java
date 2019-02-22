@@ -239,4 +239,10 @@ public class Filter extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        introVideoView.start();
+    }
+
 }

@@ -62,14 +62,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="Username"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txtConnectionUsername"
         app:layout_constraintHorizontal_bias="0.771"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="#FFFFFF"
-        app:layout_constraintVertical_bias="0.334" />
+        app:layout_constraintVertical_bias="0.265" />
 
     <EditText
         android:id="@+id/txtConnectionUsername"
@@ -95,7 +95,7 @@
         app:layout_constraintHorizontal_bias="0.874"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.329" />
+        app:layout_constraintVertical_bias="0.257" />
 
     <TextView
         android:id="@+id/lblConnectionName"
@@ -108,14 +108,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="Name"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txtConnectionName"
-        app:layout_constraintHorizontal_bias="0.771"
+        app:layout_constraintHorizontal_bias="0.779"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="#FFFFFF"
-        app:layout_constraintVertical_bias="0.202" />
+        app:layout_constraintVertical_bias="0.134" />
 
     <EditText
         android:id="@+id/txtConnectionName"
@@ -141,7 +141,7 @@
         app:layout_constraintHorizontal_bias="0.874"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.193" />
+        app:layout_constraintVertical_bias="0.12" />
 
 
     <Button

@@ -27,6 +27,7 @@ public class Dashboard extends AppCompatActivity {
     private ViewPager viewPager;
     private DashboardPagerAdapter adapter;
     private Button btnFilterOptions;
+    private Button btnAddConnection;
 
     private final String FILE_NAME="Silent_Voyager_Credentials.txt";
     private String[] arrResults = null;
@@ -60,6 +61,25 @@ public class Dashboard extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(getApplicationContext(), Filter.class);
+
+                /*Need the username for the Filter activity to query the database for common users*/
+                intent.putExtra("username", getIntent().getExtras().getString("username"));
+                intent.putExtra("password", getIntent().getExtras().getString("password"));
+
+                intent.putExtra("PATH", getIntent().getExtras().getString("PATH"));
+
+                startActivityForResult(intent, 100);
+
+            }
+        });
+
+        btnAddConnection = (Button) findViewById(R.id.btnAddConnection);
+
+        btnAddConnection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), ConnectionAdd.class);
 
                 /*Need the username for the Filter activity to query the database for common users*/
                 intent.putExtra("username", getIntent().getExtras().getString("username"));
@@ -295,6 +315,12 @@ public class Dashboard extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        introVideoView.start();
     }
 
 }
