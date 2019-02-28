@@ -84,6 +84,11 @@ public class FormPost <K,V> {
         this.values.add(value);
     }
 
+    public void removePair(K key) {
+        this.values.remove(this.KVMap.get(key));
+        this.KVMap.remove(key);
+    }
+
     public V[] getValues() {
         String[] arr = new String[values.size()];
         arr = values.toArray(arr);
