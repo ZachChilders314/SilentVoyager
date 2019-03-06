@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -17,12 +18,12 @@ import com.x10host.burghporter31415.internetservices.InternetPHPRequestService;
 public class DashboardInfo extends AppCompatActivity {
 
     private VideoView introVideoView;
-    private EditText txtUsername;
-    private EditText txtLatitude;
-    private EditText txtLongitude;
-    private EditText txtAltitude;
-    private EditText txtCity;
-    private EditText txtDate;
+    private TextView lblUsernameDisplay;
+    private TextView lblLatitudeDisplay;
+    private TextView lblLongitudeDisplay;
+    private TextView lblAltitudeDisplay;
+    private TextView lblCityDisplay;
+    private TextView lblDateDisplay;
     private Button btnReturn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class DashboardInfo extends AppCompatActivity {
 
         Toast.makeText(this, datestamp,Toast.LENGTH_LONG).show();
 
-        introVideoView = (VideoView) findViewById(R.id.introVideoView);
+        /*introVideoView = (VideoView) findViewById(R.id.introVideoView);
 
         introVideoView.setVideoPath(getIntent().getExtras().getString("PATH"));
         introVideoView.requestFocus();
@@ -51,22 +52,23 @@ public class DashboardInfo extends AppCompatActivity {
             public void onPrepared(MediaPlayer mp) {
                 mp.setLooping(true);
             }
-        });
+        }); */
 
-        txtUsername = (EditText) findViewById(R.id.txtName);
-        txtLatitude = (EditText) findViewById(R.id.txtLatitude);
-        txtLongitude = (EditText) findViewById(R.id.txtLongitude);
-        txtAltitude = (EditText) findViewById(R.id.txtAltitude);
-        txtCity = (EditText) findViewById(R.id.txtCity);
-        txtDate = (EditText) findViewById(R.id.txtDate);
+
+        lblUsernameDisplay = (TextView) findViewById(R.id.lblUsernameDisplay);
+        lblLatitudeDisplay = (TextView) findViewById(R.id.lblLatitudeDisplay);
+        lblLongitudeDisplay = (TextView) findViewById(R.id.lblLongitudeDisplay);
+        lblAltitudeDisplay = (TextView) findViewById(R.id.lblAltitudeDisplay);
+        lblCityDisplay = (TextView) findViewById(R.id.lblCityDisplay);
+        lblDateDisplay = (TextView) findViewById(R.id.lblDateDisplay);
         btnReturn = (Button) findViewById(R.id.btnReturn);
 
-        txtUsername.setText(username);
-        txtLatitude.setText(latitude);
-        txtLongitude.setText(longitude);
-        txtAltitude.setText(altitude);
-        txtCity.setText(city);
-        txtDate.setText(datestamp);
+        lblUsernameDisplay.setText(username);
+        lblLatitudeDisplay.setText(latitude);
+        lblLongitudeDisplay.setText(longitude);
+        lblAltitudeDisplay.setText(altitude);
+        lblCityDisplay.setText(city);
+        lblDateDisplay.setText(datestamp);
 
         btnReturn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -77,12 +79,12 @@ public class DashboardInfo extends AppCompatActivity {
             }
         });
 
-
     }
 
+    /*
     @Override
     protected void onResume() {
         super.onResume();
         introVideoView.start();
-    }
+    } */
 }

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimary">#1c2430</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#000000</color>
     <color name="green">#00FF00</color>
     <color name="backgroundColor">#000000</color>
+    <color name="backgroundColorLight">#FFFFFF</color>
     <color name="lightBlue">#0099ff</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">@android:color/transparent</color>
+    <color name = "grey">#5f6266</color>
 
     <color name="primaryButtonLoginStart">#0099ff</color>
     <color name="primaryButtonLoginEnd">#000000</color>
@@ -58,5 +60,43 @@
     <color name="outlineDarkTransparentPressedStart">@android:color/transparent</color>
     <color name="outlineDarkTransparentPressedEnd">@android:color/transparent</color>
     <color name="outlineDarkTransparentPressedBorder">#0099ff</color>
+
+    <color name="outlineDarkSemiTransparentStart">#200099ff</color>
+    <color name="outlineDarkSemiTransparentEnd">#200099ff</color>
+    <color name="outlineDarkSemiTransparentBorder">#FFFFFF</color>
+
+    <color name="outlineDarkSemiTransparentFocusedStart">@android:color/transparent</color>
+    <color name="outlineDarkSemiTransparentFocusedEnd">#300099ff</color>
+    <color name="outlineDarkSemiTransparentFocusedBorder">#30FFFFFF</color>
+
+    <color name="outlineDarkSemiTransparentPressedStart">@android:color/transparent</color>
+    <color name="outlineDarkSemiTransparentPressedEnd">#300099ff</color>
+    <color name="outlineDarkSemiTransparentPressedBorder">#30FFFFFF</color>
+
+    <color name="outlineDarkSemiTransparentWhiteStart">#30FFFFFF</color>
+    <color name="outlineDarkSemiTransparentWhiteEnd">#30FFFFFF</color>
+    <color name="outlineDarkSemiTransparentWhiteBorder">#FFFFFF</color>
+
+    <color name="outlineDarkSemiTransparentWhiteFocusedStart">@android:color/transparent</color>
+    <color name="outlineDarkSemiTransparentWhiteFocusedEnd">#30FFFFFF</color>
+    <color name="outlineDarkSemiTransparentWhiteFocusedBorder">#80FFFFFF</color>
+
+    <color name="outlineDarkSemiTransparentWhitePressedStart">@android:color/transparent</color>
+    <color name="outlineDarkSemiTransparentWhitePressedEnd">#30FFFFFF</color>
+    <color name="outlineDarkSemiTransparentWhitePressedBorder">#80FFFFFF</color>
+
+
+    <color name = "outlineGreyStart">#242f3e</color>
+    <color name = "outlineGreyEnd">#242f3e</color>
+    <color name = "outlineGreyBorder">#000000</color>
+
+    <color name = "outlineGreyFocusedStart">#1c2430</color>
+    <color name = "outlineGreyFocusedEnd">#1c2430</color>
+    <color name = "outlineGreyFocusedBorder">#000000</color>
+
+    <color name = "outlineGreyPressedStart">#1c2430</color>
+    <color name = "outlineGreyPressedEnd">#1c2430</color>
+    <color name = "outlineGreyPressedBorder">#000000</color>
+
 
 </resources>

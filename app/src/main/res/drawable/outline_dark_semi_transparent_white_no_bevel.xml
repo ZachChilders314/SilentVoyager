@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_pressed="true" >
+        <shape android:shape="rectangle"  >
+            <corners android:radius="0dip" />
+            <stroke android:width="1dip" android:color="@color/outlineDarkSemiTransparentWhitePressedBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkSemiTransparentWhitePressedStart" android:endColor="@color/outlineDarkSemiTransparentWhitePressedEnd"  />
+            <padding android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp"/>
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle"  >
+            <corners android:radius="0dip" />
+            <stroke android:width="1dip" android:color="@color/outlineDarkSemiTransparentWhiteFocusedBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkSemiTransparentWhiteFocusedStart" android:endColor="@color/outlineDarkSemiTransparentWhiteFocusedEnd"  />
+            <padding android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp"/>
+        </shape>
+    </item>
+    <item >
+        <shape android:shape="rectangle"  >
+            <corners android:radius="0dip" />
+            <stroke android:width="1dip" android:color="@color/outlineDarkSemiTransparentWhiteBorder" />
+            <gradient android:angle="-90" android:startColor="@color/outlineDarkSemiTransparentWhiteStart" android:endColor="@color/outlineDarkSemiTransparentWhiteEnd" />
+            <padding android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp"/>
+        </shape>
+    </item>
+</selector>

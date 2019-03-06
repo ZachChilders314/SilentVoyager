@@ -41,6 +41,7 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        /*
         introVideoView = (VideoView) findViewById(R.id.introVideoView);
 
         introVideoView.setVideoPath(getIntent().getExtras().getString("PATH"));
@@ -52,7 +53,7 @@ public class Dashboard extends AppCompatActivity {
             public void onPrepared(MediaPlayer mp) {
                 mp.setLooping(true);
             }
-        });
+        }); */
 
         btnFilterOptions = (Button) findViewById(R.id.btnFilterOptions);
 
@@ -317,10 +318,11 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
+    /*
     @Override
     protected void onResume() {
         super.onResume();
         introVideoView.start();
-    }
+    } */
 
 }

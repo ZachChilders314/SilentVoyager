@@ -2,6 +2,8 @@ package com.x10host.burghporter31415.silentvoyager;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000"))); //Set the App Bar Color
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
+    android:background="@color/backgroundColorLight"
     tools:context=".Dashboard">
 
-    <VideoView
+    <!--<VideoView
         android:id="@+id/introVideoView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -30,23 +30,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.408" />
+        app:layout_constraintVertical_bias="0.408" />-->
 
     <android.support.design.widget.TabLayout
         android:id="@+id/dashboardTab"
-        android:layout_width="fill_parent"
-        android:layout_height="51dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/outline_dark_transparent_no_bevel"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/outline_grey"
 
+        app:tabIndicatorHeight="3dp"
         app:tabSelectedTextColor="@color/lightBlue"
-        app:tabTextColor="@color/white"
-        app:tabIndicatorColor="@color/lightBlue"
+        app:tabTextColor="@color/backgroundColorLight"
+        app:tabIndicatorColor="@color/backgroundColorLight"
         app:tabIndicatorFullWidth="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +62,7 @@
             android:text="Connections" />
 
         <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Map" />
 
@@ -76,12 +72,11 @@
     <android.support.v4.view.ViewPager
 
         android:id="@+id/dashboardViewpager"
-        android:layout_width="343dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:padding="0dp"
         android:background="@drawable/outline_dark_transparent_no_border"
         app:layout_constraintBottom_toTopOf="@+id/btnAddConnection"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,42 +88,34 @@
 
     <Button
         android:id="@+id/btnFilterOptions"
-        android:layout_width="343dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/outline_dark_transparent_no_bevel"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
         android:text="Filter"
-        android:textColor="#FFFFFF"
+        android:background="@drawable/outline_grey"
+        android:textColor="@color/backgroundColorLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.982" />
+        app:layout_constraintVertical_bias="1" />
 
     <Button
         android:id="@+id/btnAddConnection"
-        android:layout_width="343dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/outline_dark_transparent_no_bevel"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/outline_grey"
         android:text="Add Connection"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        android:textColor="@color/backgroundColorLight"
+        app:layout_constraintBottom_toTopOf="@+id/btnFilterOptions"
+        app:layout_constraintEnd_toEndOf="@+id/btnFilterOptions"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.862" />
+        app:layout_constraintVertical_bias="1" />
 
 
 

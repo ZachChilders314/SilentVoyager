@@ -66,8 +66,8 @@ public class FormPost <K,V> {
             result = httpclient.execute(httppost, responseHandler);
 
         } catch(Exception ex) {
-            Log.i("com.x10host", ex.toString());
             result = "Failed";
+            ex.printStackTrace();
         }
 
         return result;

@@ -65,8 +65,9 @@ public class ConnectionAdd extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.list_view_results);
 
         final FormPost<String, String> resultFormPost = new FormPost<>();
-        final PHPPage resultRequestPageSearch = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/user_match.php");
-        final PHPPage resultRequestPageRequest = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/request_connection.php");
+        final PHPPage resultRequestPageSearch = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/user_match.php");
+        final PHPPage resultRequestPageRequest = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/request_connection.php");
+        final PHPPage resultRequestPageRequestResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/request_connection_results.php");
 
         resultFormPost.addPair("username", getIntent().getExtras().getString("username"));
         resultFormPost.addPair("password", getIntent().getExtras().getString("password"));
@@ -115,6 +116,7 @@ public class ConnectionAdd extends AppCompatActivity {
 
                                 for (int i = 0; i < result.length; i++) {
                                     if(!result[i].toLowerCase().equals(username.toLowerCase())) {
+                                        Log.i("com.x10host", result[i]);
                                         listItems.add(result[i]);
                                     }
                                 }
@@ -143,6 +145,18 @@ public class ConnectionAdd extends AppCompatActivity {
                     listView.setAdapter(adapter);
 
                     resultFormPost.removePair("search_param"); /*Don't need in header body*/
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            /*Remove Results that the user has already sent a request for*/
+                            String[] requestedUsernames = resultFormPost.submitPost(resultRequestPageRequestResults, MethodType.POST).split("\n");
+
+                            for(int i = 0; i < requestedUsernames.length; i++) {
+                                listItems.remove(requestedUsernames[0]); /*Remove the usernames that have been requested. Will not affect the list if an empty result*/
+                            }
+                        }
+                    }).start();
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -193,6 +207,7 @@ public class ConnectionAdd extends AppCompatActivity {
                                 }
                             };
 
+                            /*FROM: https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android*/
                             AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionAdd.this);
                             builder.setMessage("Send Request?").setPositiveButton("Yes", dialogClickListener)
                                     .setNegativeButton("No", dialogClickListener).show();

@@ -1,13 +1,8 @@
 package com.x10host.burghporter31415.fragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -90,8 +86,12 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
         Polygon polygon = map.addPolygon(rectOptions);
         polygon.setStrokeColor(Color.parseColor("#0099ff"));
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(coords, (float)18.0));
-        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        boolean success = map.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                        getContext(), R.raw.map_style));
+
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(coords, (float)12.0));
+        //map.setMapType(GoogleMap.MAP_TYPE_HYBRID); OVERRIDES JSON FILE
 
     }
 
