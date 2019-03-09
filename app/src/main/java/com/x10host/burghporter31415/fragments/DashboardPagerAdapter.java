@@ -39,6 +39,13 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
 
             return connectionsFragment;
 
+        } else if(i == 2) {
+
+            RequestsFragment requestsFragment = new RequestsFragment();
+            requestsFragment.setArguments(this.bundle);
+
+            return requestsFragment;
+
         } else {
 
             MapFragment mapFragment = new MapFragment();
@@ -52,7 +59,7 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
 
     @Override
     public int getCount() {
-        return 3; //Number of tabs
+        return 4; //Number of tabs
     }
 
     @Override
@@ -63,6 +70,8 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
             case 1:
                 return mContext.getString(R.string.category_connections);
             case 2:
+                return mContext.getString(R.string.category_requests);
+            case 3:
                 return mContext.getString(R.string.category_map);
             default:
                 return null;
@@ -75,8 +84,10 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
         return POSITION_NONE;
     }
 
-    public void setData(String[] newData) {
-        this.bundle.putStringArray("arr", newData);
+    public void setData(String[] results, String[] connectionResults, String[] requestResults) {
+        this.bundle.putStringArray("results", results);
+        this.bundle.putStringArray("connectionResults", connectionResults);
+        this.bundle.putStringArray("requestResults", requestResults);
     }
 
     public void setBundle(Bundle bundle) { this.bundle = bundle; }

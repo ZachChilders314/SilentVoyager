@@ -8,6 +8,6 @@
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center"
     android:textColor="@color/backgroundColorLight"
-    android:background="@drawable/outline_grey"
+    android:background="@color/warmGrey"
     android:layout_marginBottom="5dp"
     android:minHeight="?android:attr/listPreferredItemHeightSmall" />

@@ -50,7 +50,7 @@ public class Filter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
-        introVideoView = (VideoView) findViewById(R.id.introVideoView);
+        /*introVideoView = (VideoView) findViewById(R.id.introVideoView);
 
         introVideoView.setVideoPath(getIntent().getExtras().getString("PATH"));
         introVideoView.requestFocus();
@@ -61,11 +61,11 @@ public class Filter extends AppCompatActivity {
             public void onPrepared(MediaPlayer mp) {
                 mp.setLooping(true);
             }
-        });
+        }); */
 
         /*Set the adapters first -- I will need to make a PHP request to get all usernames associated with current*/
         String[] arr = {getIntent().getExtras().getString("username")}; //Temporary Provision
-        String[] arr2 = {"10", "25", "100", "1000"};
+        String[] arr2 = {"10", "25", "100", "500"};
 
         /*All Preliminary Stuff to set up Spinners*/
         final Spinner spinnerName = (Spinner) findViewById(R.id.spinnerName);
@@ -239,10 +239,11 @@ public class Filter extends AppCompatActivity {
         }
     }
 
+    /*
     @Override
     protected void onResume() {
         super.onResume();
         introVideoView.start();
-    }
+    } */
 
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
+    android:background="@color/darkGrey"
     tools:context="com.x10host.burghporter31415.silentvoyager.DashboardInfo">
 
     <!--<Button
@@ -26,7 +26,7 @@
            app:layout_constraintTop_toTopOf="parent"
            app:layout_constraintVertical_bias="0.775" />-->
 
-    <VideoView
+    <!--<VideoView
         android:id="@+id/introVideoView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -49,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.255" />
+        app:layout_constraintVertical_bias="0.255" />-->
 
     <TextView
         android:id="@+id/lblConnectionUsername"
@@ -81,8 +81,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:alpha=".7"
-        android:background="@drawable/outline_dark"
+        android:background="@color/warmGrey"
+        android:gravity="center"
         android:editable="false"
         android:ems="10"
         android:enabled="false"
@@ -127,8 +127,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:alpha=".7"
-        android:background="@drawable/outline_dark"
+        android:background="@color/warmGrey"
+        android:gravity="center"
         android:editable="false"
         android:ems="10"
         android:enabled="false"
@@ -146,7 +146,7 @@
 
     <Button
         android:id="@+id/btnConnectionReturn"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -154,7 +154,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/outline_dark_transparent"
+        android:background="@color/warmGrey"
         android:text="Return"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -166,7 +166,7 @@
 
     <Button
         android:id="@+id/btnRemoveConnection"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -174,7 +174,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/outline_dark_transparent_red"
+        android:background="@color/warmGrey"
         android:text="Remove Connection"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/btnConnectionReturn"

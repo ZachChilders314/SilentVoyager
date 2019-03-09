@@ -11,6 +11,8 @@
     <color name="white">#FFFFFF</color>
     <color name="transparent">@android:color/transparent</color>
     <color name = "grey">#5f6266</color>
+    <color name = "darkGrey">#1c2430</color>
+    <color name="warmGrey">#38414e</color>
 
     <color name="primaryButtonLoginStart">#0099ff</color>
     <color name="primaryButtonLoginEnd">#000000</color>
@@ -86,8 +88,8 @@
     <color name="outlineDarkSemiTransparentWhitePressedBorder">#80FFFFFF</color>
 
 
-    <color name = "outlineGreyStart">#242f3e</color>
-    <color name = "outlineGreyEnd">#242f3e</color>
+    <color name = "outlineGreyStart">#1c2430</color>
+    <color name = "outlineGreyEnd">#1c2430</color>
     <color name = "outlineGreyBorder">#000000</color>
 
     <color name = "outlineGreyFocusedStart">#1c2430</color>
@@ -97,6 +99,18 @@
     <color name = "outlineGreyPressedStart">#1c2430</color>
     <color name = "outlineGreyPressedEnd">#1c2430</color>
     <color name = "outlineGreyPressedBorder">#000000</color>
+
+    <color name = "outlineGreyDarkStart">#242f3e</color>
+    <color name = "outlineGreyDarkEnd">#242f3e</color>
+    <color name = "outlineGreyDarkBorder">#FFFFFF</color>
+
+    <color name = "outlineGreyDarkFocusedStart">#1c2430</color>
+    <color name = "outlineGreyDarkFocusedEnd">#1c2430</color>
+    <color name = "outlineGreyDarkFocusedBorder">#FFFFFF</color>
+
+    <color name = "outlineGreyDarkPressedStart">#1c2430</color>
+    <color name = "outlineGreyDarkPressedEnd">#1c2430</color>
+    <color name = "outlineGreyDarkPressedBorder">#FFFFFF</color>
 
 
 </resources>

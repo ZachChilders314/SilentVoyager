@@ -34,10 +34,11 @@ public class EntryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_entry, container, false);
 
         final Bundle bundle = this.getArguments();
-        String[] arr = bundle.getStringArray("arr");
+        String[] arr = bundle.getStringArray("results");
 
         ArrayList<String> listItems = new ArrayList<String>();
 

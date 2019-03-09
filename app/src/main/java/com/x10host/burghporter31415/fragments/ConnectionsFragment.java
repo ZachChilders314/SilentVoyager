@@ -42,7 +42,7 @@ public class ConnectionsFragment extends Fragment {
 
         final Bundle bundle = this.getArguments();
         //String[] arr = bundle.getStringArray("arr");
-        String[] arr = {"Joe (@joe232)", "Bradley (@bRad432)", "Lisa (@lPasta489)"}; //TEST DATA
+        String[] arr = bundle.getStringArray("connectionResults"); //TEST DATA
 
         ArrayList<String> listItems = new ArrayList<String>();
 

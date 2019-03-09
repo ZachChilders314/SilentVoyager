@@ -39,7 +39,7 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
         mapView.onCreate(savedInstanceState);
 
         final Bundle bundle = this.getArguments();
-        this.arr = bundle.getStringArray("arr");
+        this.arr = bundle.getStringArray("results");
 
         mapView.getMapAsync(this);
 
@@ -58,7 +58,7 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
         map = googleMap;
         map.getUiSettings().setMyLocationButtonEnabled(false);
 
-        if(arr.length == 0) {return; }
+        if(arr == null || arr.length == 0) {return; }
 
         String[] currentCoords = this.arr[0].split(",");
         LatLng coords = new LatLng(Double.parseDouble(currentCoords[1]), Double.parseDouble(currentCoords[2]));

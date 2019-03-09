@@ -52,7 +52,10 @@
         <activity android:name=".Filter" />
         <activity android:name="com.x10host.burghporter31415.fragments.ConnectionsFragment" />
         <activity android:name=".ConnectionSelected" />
-        <activity android:name=".ConnectionAdd"></activity>
+        <activity
+            android:name=".ConnectionAdd"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
     </application>
 
 </manifest>

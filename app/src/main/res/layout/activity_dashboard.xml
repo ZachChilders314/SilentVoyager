@@ -48,18 +48,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
+        app:tabMode="scrollable"
+        app:tabMinWidth="130dp"
+        app:tabGravity="center"
         app:layout_constraintVertical_bias="0.0">
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:text="Entries" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Connections" />
+            android:text="Friends" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Requests" />
 
         <android.support.design.widget.TabItem
             android:layout_width="match_parent"

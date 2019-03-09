@@ -36,13 +36,15 @@ public class ConnectionAdd extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<String> adapter;
 
+    private String[] removableUsernames = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_conection);
 
-        introVideoView = (VideoView) findViewById(R.id.introVideoView);
+        /*introVideoView = (VideoView) findViewById(R.id.introVideoView);
 
         introVideoView.setVideoPath(getIntent().getExtras().getString("PATH"));
         introVideoView.requestFocus();
@@ -53,7 +55,7 @@ public class ConnectionAdd extends AppCompatActivity {
             public void onPrepared(MediaPlayer mp) {
                 mp.setLooping(true);
             }
-        });
+        }); */
 
         /*Make a connection to the server to display results on click of the search button*/
 
@@ -116,7 +118,6 @@ public class ConnectionAdd extends AppCompatActivity {
 
                                 for (int i = 0; i < result.length; i++) {
                                     if(!result[i].toLowerCase().equals(username.toLowerCase())) {
-                                        Log.i("com.x10host", result[i]);
                                         listItems.add(result[i]);
                                     }
                                 }
@@ -146,17 +147,27 @@ public class ConnectionAdd extends AppCompatActivity {
 
                     resultFormPost.removePair("search_param"); /*Don't need in header body*/
 
-                    new Thread(new Runnable() {
+                    ArrayList<String> removedUsernames = new ArrayList<String>();
+
+                    Thread threadRequestedUsernames = new Thread(new Runnable() {
                         @Override
                         public void run() {
                             /*Remove Results that the user has already sent a request for*/
                             String[] requestedUsernames = resultFormPost.submitPost(resultRequestPageRequestResults, MethodType.POST).split("\n");
-
-                            for(int i = 0; i < requestedUsernames.length; i++) {
-                                listItems.remove(requestedUsernames[0]); /*Remove the usernames that have been requested. Will not affect the list if an empty result*/
-                            }
+                            setRemovableUsernames(requestedUsernames); //Callback function
                         }
-                    }).start();
+                    });
+
+                    threadRequestedUsernames.start();
+                    threadRequestedUsernames.join();
+
+                    /*Need to do this because you can not alter adapter in a thread that is not in UI*/
+
+                    for(String username : removableUsernames) {
+                        listItems.remove(username);
+                    }
+
+                    adapter.notifyDataSetChanged();
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -164,7 +175,6 @@ public class ConnectionAdd extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                             final int pos = (int) id;
-
 
                             /*FROM: https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android*/
                             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -188,11 +198,11 @@ public class ConnectionAdd extends AppCompatActivity {
                                                 thread.start();
                                                 thread.join();
 
-                                                Toast.makeText(ConnectionAdd.this, "Request send to: " + listItems.get(pos),
-                                                        Toast.LENGTH_LONG).show();
-
                                                 listItems.remove(pos);
                                                 adapter.notifyDataSetChanged(); /*Update the Data*/
+
+                                                Toast.makeText(ConnectionAdd.this, "Request send to: " + listItems.get(pos),
+                                                        Toast.LENGTH_LONG).show();
 
                                             } catch (Exception e) {
                                                 //TODO
@@ -236,10 +246,15 @@ public class ConnectionAdd extends AppCompatActivity {
         });
     }
 
+    private void setRemovableUsernames(String[] removableUsernames) {
+        this.removableUsernames = removableUsernames;
+    }
+
+    /*
     @Override
     protected void onResume() {
         super.onResume();
         introVideoView.start();
-    }
+    } */
 
 }

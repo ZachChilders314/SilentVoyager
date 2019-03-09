@@ -42,7 +42,7 @@ public class ConnectionSelected extends AppCompatActivity {
 
         Toast.makeText(this, connectionName + " (@" + connectionUsername + ")", Toast.LENGTH_LONG).show();
 
-        introVideoView = (VideoView) findViewById(R.id.introVideoView);
+        /*introVideoView = (VideoView) findViewById(R.id.introVideoView);
 
         introVideoView.setVideoPath(getIntent().getExtras().getString("PATH"));
         introVideoView.requestFocus();
@@ -53,7 +53,7 @@ public class ConnectionSelected extends AppCompatActivity {
             public void onPrepared(MediaPlayer mp) {
                 mp.setLooping(true);
             }
-        });
+        });*/
 
         txtConnectionName = (EditText) findViewById(R.id.txtConnectionName);
         txtConnectionUsername = (EditText) findViewById(R.id.txtConnectionUsername);
@@ -119,10 +119,10 @@ public class ConnectionSelected extends AppCompatActivity {
 
     }
 
-    @Override
+    /*@Override
     protected void onResume() {
         super.onResume();
         introVideoView.start();
-    }
+    }*/
 
 }

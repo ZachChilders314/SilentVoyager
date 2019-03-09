@@ -31,9 +31,14 @@ public class Dashboard extends AppCompatActivity {
 
     private final String FILE_NAME="Silent_Voyager_Credentials.txt";
     private String[] arrResults = null;
+    private String[] connectionResults = null;
+    private String[] requestResults = null;
 
     final FormPost<String, String> resultFormPost = new FormPost<>();
     final PHPPage resultRequestPage = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/get_results.php");
+    final PHPPage resultRequestPageResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/connection_results.php");
+    final PHPPage resultRequestPageRequestResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/request_connection_results.php");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +143,15 @@ public class Dashboard extends AppCompatActivity {
 
                 @Override
                 public void run() {
-                    String[] result = resultFormPost.submitPost(resultRequestPage, MethodType.POST).split("\n");
-                    updateResultSet(result);
-                    populateComponents(result);
+
+                    //TODO Put on timer
+                    String[] results = resultFormPost.submitPost(resultRequestPage, MethodType.POST).split("\n");
+                    String[] connectionResults = resultFormPost.submitPost(resultRequestPageResults, MethodType.POST).split("\n");
+                    String[] requestResults = resultFormPost.submitPost(resultRequestPageRequestResults, MethodType.POST).split("\n");
+
+                    updateResultSet(results, connectionResults,requestResults);
+                    populateComponents(results, connectionResults, requestResults);
+
                 }
             });
 
@@ -154,50 +165,18 @@ public class Dashboard extends AppCompatActivity {
     }
 
     /*Callback function after results have been returned for current user*/
-    private void populateComponents(final String[] results) {
+    private void populateComponents(String[] results, String[] connectionResults, String[] requestResults) {
 
-        adapter.setData(results);
+        adapter.setData(results, connectionResults, requestResults);
         adapter.notifyDataSetChanged();
-
-        //try {
-
-            /*Create a new thread for each core of the phone--this may not be optimal for Dual-Core
-            ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-            final Context context = this;
-
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-
-
-                }
-            });
-
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            });
-
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            });
-
-            executor.shutdown(); //No longer accept tasks for executor
-            executor.awaitTermination(10, TimeUnit.MINUTES); //Timeout after 10 minutes
-
-        } catch(InterruptedException e) {
-            e.printStackTrace();
-        } */
 
     }
 
-    private void updateResultSet(String[] arrResults) {
+    private void updateResultSet(String[] arrResults, String[] connectionResults, String[] requestResults) {
+        /*{Location data, connection data, and request data}*/
         this.arrResults = arrResults;
+        this.connectionResults = connectionResults;
+        this.requestResults = requestResults;
     }
 
     @Override
@@ -229,7 +208,7 @@ public class Dashboard extends AppCompatActivity {
                     runOnUiThread(new Runnable(){
                         @Override
                         public void run() {
-                            populateComponents(utils.getArrResult(arrResults));
+                            populateComponents(utils.getArrResult(arrResults), connectionResults, requestResults);
                         }
                     });
 
