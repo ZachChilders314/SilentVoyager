@@ -2,6 +2,7 @@ package com.x10host.burghporter31415.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class ConnectionsFragment extends Fragment {
 
         final Bundle bundle = this.getArguments();
         //String[] arr = bundle.getStringArray("arr");
-        String[] arr = bundle.getStringArray("connectionResults"); //TEST DATA
+        String[] arr = bundle.getStringArray("connectionResults");
 
         ArrayList<String> listItems = new ArrayList<String>();
 
@@ -78,18 +79,32 @@ public class ConnectionsFragment extends Fragment {
                 intent.putExtra("connectionName", connectionName);
                 intent.putExtra("connectionUsername", connectionUsername);
 
+                intent.putExtra("connectionPrelim", arr2[(int)id]);
+
                 intent.putExtra("username", bundle.getString("username"));
                 intent.putExtra("password", bundle.getString("password"));
 
                 intent.putExtra("PATH", bundle.getString("PATH"));
 
-                startActivity(intent);
+                startActivityForResult(intent, 100);
 
             }
 
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        /*The request and result codes need to be set accordingly in the activities*/
+        if (!(data.getStringExtra("removed") == null)) {
+            adapter.remove(data.getStringExtra("removed"));
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
 }

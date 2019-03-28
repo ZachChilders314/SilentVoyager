@@ -1,5 +1,6 @@
 package com.x10host.burghporter31415.silentvoyager;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,14 +26,14 @@ public class ConnectionSelected extends AppCompatActivity {
     private Button btnConnectionReturn;
 
     private final String BASE_URL = "http://burghporter31415.x10host.com";
-    private final String RELATIVE_URL = "/Silent_Voyager/App_Scripts/remove_connection.php";
+    private final String RELATIVE_URL = "/Silent_Voyager/App_Scripts/Connection_Scripts/remove_connection.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection_selected);
 
-        Bundle bundle = getIntent().getExtras();
+        final Bundle bundle = getIntent().getExtras();
 
         final String connectionName = bundle.getString("connectionName");
         final String connectionUsername = bundle.getString("connectionUsername");
@@ -79,15 +80,21 @@ public class ConnectionSelected extends AppCompatActivity {
                             PHPPage page = new PHPPage(BASE_URL, RELATIVE_URL);
 
                             /*Sent in the header of POST request*/
-                            connection.addPair("connectionName", connectionName);
-                            connection.addPair("connectionUsername", connectionUsername);
-
                             connection.addPair("username", username);
                             connection.addPair("password", password);
 
+                            connection.addPair("user2", connectionUsername);
+
                             String result = connection.submitPost(page, MethodType.POST);
+                            Intent dataIntent = new Intent();
+
+                            dataIntent.putExtra("removed", bundle.getString("connectionPrelim"));
+
+                            setResult(200,dataIntent);
+                            finish();
 
                         } catch(Exception e) {
+                            e.printStackTrace();
                             Log.i("com.x10host", "Credential Validation Failed");
                         }
 
@@ -102,8 +109,6 @@ public class ConnectionSelected extends AppCompatActivity {
                 } finally {
                     //TODO
                 }
-
-                Toast.makeText(ConnectionSelected.this, "Function Not Supported Yet", Toast.LENGTH_LONG).show();
 
             }
         });

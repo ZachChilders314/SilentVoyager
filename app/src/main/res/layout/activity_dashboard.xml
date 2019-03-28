@@ -85,7 +85,7 @@
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
         android:padding="0dp"
-        android:background="@drawable/outline_dark_transparent_no_border"
+        android:background="@color/darkGrey"
         app:layout_constraintBottom_toTopOf="@+id/btnAddConnection"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.584"

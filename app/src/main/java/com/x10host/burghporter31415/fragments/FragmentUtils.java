@@ -12,4 +12,10 @@ public final class FragmentUtils {
                 + dateStampArr[2] + "/" + dateStampArr[0];
 
     }
+
+    public static final String returnParsedUsernameCluster(String cluster) {
+        int start = cluster.indexOf("@") + 1;
+        return cluster.substring(start, cluster.length() - 1);
+    }
+
 }

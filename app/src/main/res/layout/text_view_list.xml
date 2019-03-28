@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center"
-    android:textColor="@color/backgroundColorLight"
-    android:background="@color/warmGrey"
+    android:textColor="@color/backgroundColor"
+    android:background="@color/backgroundColorLight"
     android:layout_marginBottom="5dp"
     android:minHeight="?android:attr/listPreferredItemHeightSmall" />

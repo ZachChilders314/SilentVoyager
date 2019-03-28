@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.x10host.burghporter31415.fragments.FragmentUtils;
 import com.x10host.burghporter31415.webconnector.FormPost;
 import com.x10host.burghporter31415.webconnector.MethodType;
 import com.x10host.burghporter31415.webconnector.PHPPage;
@@ -163,8 +164,8 @@ public class ConnectionAdd extends AppCompatActivity {
 
                     /*Need to do this because you can not alter adapter in a thread that is not in UI*/
 
-                    for(String username : removableUsernames) {
-                        listItems.remove(username);
+                    for(String cluster : removableUsernames) {
+                        listItems.remove(FragmentUtils.returnParsedUsernameCluster(cluster));
                     }
 
                     adapter.notifyDataSetChanged();
