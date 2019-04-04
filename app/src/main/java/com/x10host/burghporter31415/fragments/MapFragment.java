@@ -84,13 +84,13 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
         }
 
         Polygon polygon = map.addPolygon(rectOptions);
-        polygon.setStrokeColor(Color.parseColor("#0099ff"));
+        polygon.setStrokeColor(Color.parseColor("#FFFFFF"));
 
         boolean success = map.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
                         getContext(), R.raw.map_style));
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(coords, (float)12.0));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(coords, (float)16.0));
         //map.setMapType(GoogleMap.MAP_TYPE_HYBRID); OVERRIDES JSON FILE
 
     }

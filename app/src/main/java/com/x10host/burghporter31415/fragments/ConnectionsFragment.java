@@ -99,7 +99,7 @@ public class ConnectionsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         /*The request and result codes need to be set accordingly in the activities*/
-        if (!(data.getStringExtra("removed") == null)) {
+        if (!(data == null) && !(data.getStringExtra("removed") == null)) {
             adapter.remove(data.getStringExtra("removed"));
         }
 

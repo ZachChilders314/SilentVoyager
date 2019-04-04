@@ -90,6 +90,18 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
         this.bundle.putStringArray("requestResults", requestResults);
     }
 
+    public String[] getResults() {
+        return this.bundle.getStringArray("results");
+    }
+
+    public String[] getConnectionResults() {
+        return this.bundle.getStringArray("connectionResults");
+    }
+
+    public String[] getRequestResults() {
+        return this.bundle.getStringArray("requestResults");
+    }
+
     public void setBundle(Bundle bundle) { this.bundle = bundle; }
 
 }

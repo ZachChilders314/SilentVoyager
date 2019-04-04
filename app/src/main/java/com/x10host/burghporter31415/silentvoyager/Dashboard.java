@@ -3,6 +3,7 @@ package com.x10host.burghporter31415.silentvoyager;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +13,9 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.x10host.burghporter31415.fragments.DashboardPagerAdapter;
+import com.x10host.burghporter31415.fragments.RequestsFragment;
 import com.x10host.burghporter31415.internetservices.BackgroundServiceBroadcast;
 import com.x10host.burghporter31415.webconnector.FormPost;
 import com.x10host.burghporter31415.webconnector.MethodType;
@@ -20,7 +23,7 @@ import com.x10host.burghporter31415.webconnector.PHPPage;
 
 import java.util.ArrayList;
 
-public class Dashboard extends AppCompatActivity {
+public class Dashboard extends AppCompatActivity implements RequestsFragment.OnConnectionAddedListener {
 
     private VideoView introVideoView;
 
@@ -73,6 +76,7 @@ public class Dashboard extends AppCompatActivity {
                 intent.putExtra("password", getIntent().getExtras().getString("password"));
 
                 intent.putExtra("PATH", getIntent().getExtras().getString("PATH"));
+                intent.putExtra("connections", connectionResults);
 
                 startActivityForResult(intent, 100);
 
@@ -208,7 +212,10 @@ public class Dashboard extends AppCompatActivity {
                     runOnUiThread(new Runnable(){
                         @Override
                         public void run() {
-                            populateComponents(utils.getArrResult(arrResults), connectionResults, requestResults);
+
+                            String[] results = utils.getArrResult(arrResults);
+                            populateComponents(results, connectionResults, requestResults);
+
                         }
                     });
 
@@ -296,6 +303,31 @@ public class Dashboard extends AppCompatActivity {
         }
 
     }
+
+    /*https://developer.android.com/training/basics/fragments/communicating*/
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if (fragment instanceof RequestsFragment) {
+            RequestsFragment headlinesFragment = (RequestsFragment) fragment;
+            RequestsFragment.setOnConnectionAddedListener(this);
+        }
+    }
+
+    /*UPDATE DATA INTENT THROUGH INTERFACE*/
+    public void onConnectionAdded(String connection) {
+
+        /*Add the new connection to the array and update the fragments with the new data*/
+        if(this.connectionResults[0].isEmpty())
+            this.connectionResults[0] = connection;
+        else
+            this.connectionResults = (String[]) ArrayUtils.appendToArray(this.connectionResults, connection);
+
+        this.requestResults = (String[])ArrayUtils.removeAll(this.requestResults, connection);
+        populateComponents(adapter.getResults(), this.connectionResults, this.requestResults);
+
+    }
+
+
 
     /*
     @Override

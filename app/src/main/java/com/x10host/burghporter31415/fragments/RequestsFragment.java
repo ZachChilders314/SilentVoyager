@@ -1,13 +1,11 @@
 package com.x10host.burghporter31415.fragments;
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +15,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.x10host.burghporter31415.silentvoyager.ConnectionAdd;
-import com.x10host.burghporter31415.silentvoyager.DashboardInfo;
 import com.x10host.burghporter31415.silentvoyager.R;
 import com.x10host.burghporter31415.webconnector.FormPost;
 import com.x10host.burghporter31415.webconnector.MethodType;
@@ -30,17 +24,30 @@ import com.x10host.burghporter31415.webconnector.PHPPage;
 
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class RequestsFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    final FormPost<String, String> resultFormPost = new FormPost<>();
-    final PHPPage resuleDeletePage = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/user_match.php");
+    /*https://developer.android.com/training/basics/fragments/communicating*/
+    static OnConnectionAddedListener callback;
 
-    private ArrayAdapter<String> adapter;
+    public static void setOnConnectionAddedListener(OnConnectionAddedListener callbackOrig) {
+        callback = callbackOrig;
+    }
+
+    // This interface can be implemented by the Activity, parent Fragment,
+    // or a separate test implementation.
+    public interface OnConnectionAddedListener {
+        public void onConnectionAdded(String connection);
+    }
+
+    private static ArrayAdapter<String> adapter;
 
     private ListPopupWindow listPopupWindow;
     private Button btnRequestType;
 
     private String[] requestType = {"Received Requests", "Sent Requests"};
+    private DialogType currentType = DialogType.RECEIVED_REQUEST;
 
     public RequestsFragment() {
         // Required empty public constructor
@@ -48,6 +55,9 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        final ArrayList<String> listItems = new ArrayList<String>();
+        listItems.clear();
 
         View rootView = inflater.inflate(R.layout.fragment_requests, container, false);
 
@@ -81,11 +91,6 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
 
         /*************************************************************************************/
 
-        resultFormPost.addPair("username", bundle.getString("username"));
-        resultFormPost.addPair("password", bundle.getString("password"));
-
-        final ArrayList<String> listItems = new ArrayList<String>();
-
         if(arr.length == 0 || arr[0].isEmpty()) { return rootView; }
 
         for(int i = 0; i < arr.length; i++) {
@@ -104,52 +109,16 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 final int pos = (int) id;
+                AlertDialog.Builder builder = null;
 
-                /*FROM: https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android*/
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                if(currentType == DialogType.SENT_REQUEST) {
+                    builder = getDialogInterfaceBuilder(bundle, DialogType.SENT_REQUEST, position, listItems);
+                } else {
+                    builder = getDialogInterfaceBuilder(bundle, DialogType.RECEIVED_REQUEST, position, listItems);
+                }
 
-                        switch (which){
-
-                            case DialogInterface.BUTTON_POSITIVE:
-
-                                resultFormPost.addPair("requested", listItems.get((int)pos));
-
-                                Thread thread = new Thread(new Runnable(){
-                                    @Override
-                                    public void run() {
-                                        resultFormPost.submitPost(resuleDeletePage, MethodType.POST);
-                                    }
-                                });
-
-                                try {
-                                    thread.start();
-                                    thread.join();
-
-                                    listItems.remove(pos);
-                                    adapter.notifyDataSetChanged(); /*Update the Data*/
-
-                                    Toast.makeText(getContext(), "Request to " + listItems.get(pos) + " has been removed.",
-                                            Toast.LENGTH_LONG).show();
-
-                                } catch (Exception e) {
-                                    //TODO
-                                }
-
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
-                                break;
-                        }
-                    }
-                };
-
-                /*FROM: https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android*/
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("Undo Request?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                builder.show();
+                adapter.notifyDataSetChanged(); /*Update the Data*/
 
             }
 
@@ -158,9 +127,148 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
         return rootView;
     }
 
+    private AlertDialog.Builder getDialogInterfaceBuilder(final Bundle bundle,
+                                                                 DialogType type, final int itemPosition, final ArrayList<String> listItems) {
+
+        final PHPPage removeRequest = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/remove_request.php");
+        final PHPPage acceptConnection = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/add_connection.php");
+
+        final FormPost<String, String> resultFormPost = new FormPost<>();
+        final String selectedItem = listItems.get(itemPosition);
+
+        resultFormPost.addPair("username", bundle.getString("username"));
+        resultFormPost.addPair("password", bundle.getString("password"));
+
+        DialogInterface.OnClickListener[] listeners = {
+
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    switch (which) {
+
+                        case DialogInterface.BUTTON_POSITIVE:
+
+                            resultFormPost.addPair("requested", selectedItem);
+
+                            Thread thread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    resultFormPost.submitPost(removeRequest, MethodType.POST);
+                                }
+                            });
+
+                            try {
+                                thread.start();
+                                thread.join();
+
+                                listItems.remove(itemPosition);
+                                adapter.notifyDataSetChanged();
+
+                            } catch (Exception e) {
+                                //TODO
+                            }
+
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            break;
+                    }
+                }
+            },
+
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    switch (which) {
+
+                        case DialogInterface.BUTTON_POSITIVE:
+
+                            resultFormPost.addPair("user2", FragmentUtils.returnParsedUsernameCluster(selectedItem));
+                            resultFormPost.addPair("requested", FragmentUtils.returnParsedUsernameCluster(selectedItem));
+
+                            Thread thread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //resultFormPost.submitPost(acceptConnection, MethodType.POST);
+                                    //resultFormPost.submitPost(removeRequest, MethodType.POST);
+                                }
+                            });
+
+                            try {
+                                thread.start();
+                                thread.join();
+
+                                Toast.makeText(getActivity(), "Accepted Connection for " + listItems.get((int) itemPosition), Toast.LENGTH_LONG).show();
+
+                                /*Callback to dashboard so that the information can be updated in other fragments*/
+
+
+                                listItems.remove(itemPosition);
+                                adapter.notifyDataSetChanged();
+
+                                callback.onConnectionAdded(selectedItem);
+
+                            } catch (Exception e) {
+                                //TODO
+                            }
+
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+
+                            resultFormPost.addPair("requested", bundle.getString("username"));
+
+                            resultFormPost.removePair("username");
+                            resultFormPost.addPair("username", selectedItem);
+
+                            Thread thread2 = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    resultFormPost.submitPost(removeRequest, MethodType.POST);
+                                }
+                            });
+
+                            try {
+                                thread2.start();
+                                thread2.join();
+
+                                listItems.remove(itemPosition);
+                                adapter.notifyDataSetChanged();
+
+                            } catch (Exception e) {
+                                //TODO
+                            }
+
+                            break;
+                    }
+                }
+            }
+        };
+
+        AlertDialog.Builder[] builders = {new AlertDialog.Builder(getContext()), new AlertDialog.Builder(getContext())};
+
+        builders[0].setMessage("Undo Request?").setPositiveButton("Yes", listeners[0])
+                .setNegativeButton("No", listeners[0]);
+
+        builders[1].setMessage("Accept Connection?").setPositiveButton("Yes", listeners[1])
+                .setNegativeButton("No", listeners[1]);
+
+        if(type==DialogType.SENT_REQUEST) {
+            return builders[0];
+        } else {
+            return builders[1];
+        }
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view,
                             int position, long id) {
+
+        if(position == 0) currentType = DialogType.RECEIVED_REQUEST;
+        else currentType = DialogType.SENT_REQUEST;
 
         btnRequestType.setText(requestType[position]);
         listPopupWindow.dismiss();

@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.x10host.burghporter31415.TimePicker.DateUtil;
 import com.x10host.burghporter31415.TimePicker.DialogDateFragment;
 import com.x10host.burghporter31415.TimePicker.DialogTimeFragment;
@@ -63,8 +64,19 @@ public class Filter extends AppCompatActivity {
             }
         }); */
 
-        /*Set the adapters first -- I will need to make a PHP request to get all usernames associated with current*/
-        String[] arr = {getIntent().getExtras().getString("username")}; //Temporary Provision
+        /*Populate Spinner with username and associative connections*/
+
+        String[] connections = (String[])getIntent().getExtras().get("connections");
+        String[] arr = new String[connections[0].isEmpty() ? 1 : connections.length + 1];
+
+        arr[0] = (String) getIntent().getExtras().get("username");
+
+        if(!connections[0].isEmpty()) {
+            for (int i = 0; i < connections.length; i++) {
+                arr[i + 1] = FragmentUtils.returnParsedUsernameCluster(connections[i]);
+            }
+        }
+
         String[] arr2 = {"10", "25", "100", "500"};
 
         /*All Preliminary Stuff to set up Spinners*/
