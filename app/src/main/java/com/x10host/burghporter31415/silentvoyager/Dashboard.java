@@ -36,12 +36,13 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     private String[] arrResults = null;
     private String[] connectionResults = null;
     private String[] requestResults = null;
+    private String[] receivedResults = null;
 
     final FormPost<String, String> resultFormPost = new FormPost<>();
     final PHPPage resultRequestPage = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/get_results.php");
     final PHPPage resultRequestPageResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/connection_results.php");
     final PHPPage resultRequestPageRequestResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/request_connection_results.php");
-
+    final PHPPage resultReceivedPageRequestResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/received_connection_results.php");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,9 +153,10 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
                     String[] results = resultFormPost.submitPost(resultRequestPage, MethodType.POST).split("\n");
                     String[] connectionResults = resultFormPost.submitPost(resultRequestPageResults, MethodType.POST).split("\n");
                     String[] requestResults = resultFormPost.submitPost(resultRequestPageRequestResults, MethodType.POST).split("\n");
+                    String[] receivedResults = resultFormPost.submitPost(resultReceivedPageRequestResults, MethodType.POST).split("\n");
 
-                    updateResultSet(results, connectionResults,requestResults);
-                    populateComponents(results, connectionResults, requestResults);
+                    updateResultSet(results, connectionResults,requestResults, receivedResults);
+                    populateComponents(results, connectionResults, requestResults, receivedResults);
 
                 }
             });
@@ -169,18 +171,19 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     }
 
     /*Callback function after results have been returned for current user*/
-    private void populateComponents(String[] results, String[] connectionResults, String[] requestResults) {
+    private void populateComponents(String[] results, String[] connectionResults, String[] requestResults, String[] receivedResults) {
 
-        adapter.setData(results, connectionResults, requestResults);
+        adapter.setData(results, connectionResults, requestResults, receivedResults);
         adapter.notifyDataSetChanged();
 
     }
 
-    private void updateResultSet(String[] arrResults, String[] connectionResults, String[] requestResults) {
+    private void updateResultSet(String[] arrResults, String[] connectionResults, String[] requestResults, String[] receivedResults) {
         /*{Location data, connection data, and request data}*/
         this.arrResults = arrResults;
         this.connectionResults = connectionResults;
         this.requestResults = requestResults;
+        this.receivedResults = receivedResults;
     }
 
     @Override
@@ -214,7 +217,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
                         public void run() {
 
                             String[] results = utils.getArrResult(arrResults);
-                            populateComponents(results, connectionResults, requestResults);
+                            populateComponents(results, connectionResults, requestResults, receivedResults);
 
                         }
                     });
@@ -323,7 +326,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
             this.connectionResults = (String[]) ArrayUtils.appendToArray(this.connectionResults, connection);
 
         this.requestResults = (String[])ArrayUtils.removeAll(this.requestResults, connection);
-        populateComponents(adapter.getResults(), this.connectionResults, this.requestResults);
+        populateComponents(adapter.getResults(), this.connectionResults, this.requestResults, this.receivedResults);
 
     }
 

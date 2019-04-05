@@ -3,9 +3,7 @@ package com.x10host.burghporter31415.fragments;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +40,15 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     private static ArrayAdapter<String> adapter;
+    final ArrayList<String> listItems = new ArrayList<String>();
 
     private ListPopupWindow listPopupWindow;
     private Button btnRequestType;
 
     private String[] requestType = {"Received Requests", "Sent Requests"};
     private DialogType currentType = DialogType.RECEIVED_REQUEST;
+
+    private String[][] resultDuo;
 
     public RequestsFragment() {
         // Required empty public constructor
@@ -56,14 +57,15 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final ArrayList<String> listItems = new ArrayList<String>();
+
         listItems.clear();
 
         View rootView = inflater.inflate(R.layout.fragment_requests, container, false);
 
         final Bundle bundle = this.getArguments();
+        resultDuo = new String[][] {bundle.getStringArray("receivedResults"), bundle.getStringArray("requestResults")};
 
-        String[] arr = bundle.getStringArray("requestResults");
+        String[] arr = bundle.getStringArray("receivedResults");
 
         /*Need to create a custom list popup window due to glitch in current Android version*/
         /*USED THIS RESOURCE TO COPY CODE: http://www.informit.com/articles/article.aspx?p=2078060&seqNum=4*/
@@ -111,10 +113,10 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
                 final int pos = (int) id;
                 AlertDialog.Builder builder = null;
 
-                if(currentType == DialogType.SENT_REQUEST) {
-                    builder = getDialogInterfaceBuilder(bundle, DialogType.SENT_REQUEST, position, listItems);
-                } else {
+                if(currentType == DialogType.RECEIVED_REQUEST) {
                     builder = getDialogInterfaceBuilder(bundle, DialogType.RECEIVED_REQUEST, position, listItems);
+                } else {
+                    builder = getDialogInterfaceBuilder(bundle, DialogType.SENT_REQUEST, position, listItems);
                 }
 
                 builder.show();
@@ -140,43 +142,6 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
         resultFormPost.addPair("password", bundle.getString("password"));
 
         DialogInterface.OnClickListener[] listeners = {
-
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    switch (which) {
-
-                        case DialogInterface.BUTTON_POSITIVE:
-
-                            resultFormPost.addPair("requested", selectedItem);
-
-                            Thread thread = new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    resultFormPost.submitPost(removeRequest, MethodType.POST);
-                                }
-                            });
-
-                            try {
-                                thread.start();
-                                thread.join();
-
-                                listItems.remove(itemPosition);
-                                adapter.notifyDataSetChanged();
-
-                            } catch (Exception e) {
-                                //TODO
-                            }
-
-                            break;
-
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            //No button clicked
-                            break;
-                    }
-                }
-            },
 
             new DialogInterface.OnClickListener() {
                 @Override
@@ -245,18 +210,56 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
                             break;
                     }
                 }
+            },
+
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    switch (which) {
+
+                        case DialogInterface.BUTTON_POSITIVE:
+
+                            resultFormPost.addPair("requested", selectedItem);
+
+                            Thread thread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    resultFormPost.submitPost(removeRequest, MethodType.POST);
+                                }
+                            });
+
+                            try {
+                                thread.start();
+                                thread.join();
+
+                                listItems.remove(itemPosition);
+                                adapter.notifyDataSetChanged();
+
+                            } catch (Exception e) {
+                                //TODO
+                            }
+
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No need to do anything here
+                            break;
+                    }
+                }
             }
         };
 
         AlertDialog.Builder[] builders = {new AlertDialog.Builder(getContext()), new AlertDialog.Builder(getContext())};
 
-        builders[0].setMessage("Undo Request?").setPositiveButton("Yes", listeners[0])
+
+        builders[0].setMessage("Accept Connection?").setPositiveButton("Yes", listeners[0])
                 .setNegativeButton("No", listeners[0]);
 
-        builders[1].setMessage("Accept Connection?").setPositiveButton("Yes", listeners[1])
+        builders[1].setMessage("Undo Request?").setPositiveButton("Yes", listeners[1])
                 .setNegativeButton("No", listeners[1]);
 
-        if(type==DialogType.SENT_REQUEST) {
+        if(type==DialogType.RECEIVED_REQUEST) {
             return builders[0];
         } else {
             return builders[1];
@@ -267,11 +270,25 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
     public void onItemClick(AdapterView<?> parent, View view,
                             int position, long id) {
 
-        if(position == 0) currentType = DialogType.RECEIVED_REQUEST;
-        else currentType = DialogType.SENT_REQUEST;
+        listItems.clear();
+
+        if(!this.resultDuo[position][0].isEmpty()) {
+            for(String item : this.resultDuo[position]) {
+                listItems.add(item);
+            }
+        }
+
+        if(position == 0) {
+            currentType = DialogType.RECEIVED_REQUEST;
+        }
+        else {
+            currentType = DialogType.SENT_REQUEST;
+        }
 
         btnRequestType.setText(requestType[position]);
         listPopupWindow.dismiss();
+
+        adapter.notifyDataSetChanged();
 
     }
 }

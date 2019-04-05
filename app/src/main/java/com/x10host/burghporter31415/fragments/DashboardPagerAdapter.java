@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.x10host.burghporter31415.silentvoyager.R;
 
@@ -84,10 +85,15 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
         return POSITION_NONE;
     }
 
-    public void setData(String[] results, String[] connectionResults, String[] requestResults) {
+    public void setData(String[] results, String[] connectionResults, String[] requestResults, String[] receivedResults) {
         this.bundle.putStringArray("results", results);
         this.bundle.putStringArray("connectionResults", connectionResults);
         this.bundle.putStringArray("requestResults", requestResults);
+        this.bundle.putStringArray("receivedResults", receivedResults);
+
+        for(String s : receivedResults) {
+            Log.i("com.x10host", receivedResults[0]);
+        }
     }
 
     public String[] getResults() {
