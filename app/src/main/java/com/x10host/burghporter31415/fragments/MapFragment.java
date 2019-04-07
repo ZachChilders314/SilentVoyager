@@ -58,7 +58,7 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
         map = googleMap;
         map.getUiSettings().setMyLocationButtonEnabled(false);
 
-        if(arr == null || arr.length == 0) {return; }
+        if(arr == null || arr.length == 0 || this.arr[0].isEmpty()) {return;}
 
         String[] currentCoords = this.arr[0].split(",");
         LatLng coords = new LatLng(Double.parseDouble(currentCoords[1]), Double.parseDouble(currentCoords[2]));

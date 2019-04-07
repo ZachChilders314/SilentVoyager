@@ -48,7 +48,7 @@ public class BackgroundUploadService extends Service {
 
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 2*60*1000; //Retrieve the location every 2 minutes
-    private static final float LOCATION_DISTANCE = 30; //Minimum location difference should be 30 meters
+    private static final float LOCATION_DISTANCE = 40; //Minimum location difference should be 40 meters
 
     private final String[] columns = {"latitude", "longitude", "altitude", "city", "datestamp", "year", "month", "day","hour", "minute", "second"};
 

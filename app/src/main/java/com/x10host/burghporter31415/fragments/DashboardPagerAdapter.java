@@ -90,10 +90,6 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter  {
         this.bundle.putStringArray("connectionResults", connectionResults);
         this.bundle.putStringArray("requestResults", requestResults);
         this.bundle.putStringArray("receivedResults", receivedResults);
-
-        for(String s : receivedResults) {
-            Log.i("com.x10host", receivedResults[0]);
-        }
     }
 
     public String[] getResults() {

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,9 +64,10 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
         View rootView = inflater.inflate(R.layout.fragment_requests, container, false);
 
         final Bundle bundle = this.getArguments();
-        resultDuo = new String[][] {bundle.getStringArray("receivedResults"), bundle.getStringArray("requestResults")};
 
-        String[] arr = bundle.getStringArray("receivedResults");
+        /*Takes into account if the arrays are empty or not*/
+        resultDuo = new String[][] {bundle.getStringArray("receivedResults").length == 0 ? new String[]{""} : bundle.getStringArray("receivedResults"),
+                                    bundle.getStringArray("requestResults").length == 0 ? new String[]{""} : bundle.getStringArray("requestResults")};
 
         /*Need to create a custom list popup window due to glitch in current Android version*/
         /*USED THIS RESOURCE TO COPY CODE: http://www.informit.com/articles/article.aspx?p=2078060&seqNum=4*/
@@ -93,10 +95,10 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
 
         /*************************************************************************************/
 
-        if(arr.length == 0 || arr[0].isEmpty()) { return rootView; }
-
-        for(int i = 0; i < arr.length; i++) {
-            listItems.add(arr[i].trim());
+        if(!resultDuo[0][0].isEmpty()) {
+            for (int i = 0; i < resultDuo[0].length; i++) {
+                listItems.add(resultDuo[0][i].trim());
+            }
         }
 
         adapter = new ArrayAdapter<String>(getContext(), R.layout.text_view_list, listItems);
@@ -275,7 +277,7 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
         if(!this.resultDuo[position][0].isEmpty()) {
             for(String item : this.resultDuo[position]) {
                 listItems.add(item);
-            }
+           }
         }
 
         if(position == 0) {

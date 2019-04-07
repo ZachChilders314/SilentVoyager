@@ -26,6 +26,9 @@ import com.x10host.burghporter31415.webconnector.FormPost;
 import com.x10host.burghporter31415.webconnector.MethodType;
 import com.x10host.burghporter31415.webconnector.PHPPage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class ConnectionAdd extends AppCompatActivity {
@@ -71,6 +74,7 @@ public class ConnectionAdd extends AppCompatActivity {
         final PHPPage resultRequestPageSearch = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/user_match.php");
         final PHPPage resultRequestPageRequest = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/request_connection.php");
         final PHPPage resultRequestPageRequestResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/request_connection_results.php");
+        final PHPPage resultReceivedRequestPageRequestResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/received_connection_results.php");
 
         resultFormPost.addPair("username", getIntent().getExtras().getString("username"));
         resultFormPost.addPair("password", getIntent().getExtras().getString("password"));
@@ -108,7 +112,8 @@ public class ConnectionAdd extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            String[] result = resultFormPost.submitPost(resultRequestPageSearch, MethodType.POST).split("\n");
+                            String[] result = new String[0];
+                            result = resultFormPost.submitPost(resultRequestPageSearch, MethodType.POST).split("\n");
                             String username = getIntent().getExtras().getString("username");
 
                             if(result[0].isEmpty()) {
@@ -154,7 +159,11 @@ public class ConnectionAdd extends AppCompatActivity {
                         @Override
                         public void run() {
                             /*Remove Results that the user has already sent a request for*/
-                            String[] requestedUsernames = resultFormPost.submitPost(resultRequestPageRequestResults, MethodType.POST).split("\n");
+                            String[] requestedUsernames = new String[0];
+                            try {
+                                requestedUsernames = new JSONObject(resultFormPost.submitPost(resultRequestPageRequestResults, MethodType.POST)).getString("names").split("\n");
+                            } catch (JSONException e) {}
+
                             setRemovableUsernames(requestedUsernames); //Callback function
                         }
                     });
@@ -165,7 +174,33 @@ public class ConnectionAdd extends AppCompatActivity {
                     /*Need to do this because you can not alter adapter in a thread that is not in UI*/
 
                     for(String cluster : removableUsernames) {
-                        listItems.remove(FragmentUtils.returnParsedUsernameCluster(cluster));
+                        if(!cluster.isEmpty()) {
+                            listItems.remove(FragmentUtils.returnParsedUsernameCluster(cluster));
+                        }
+                    }
+
+                    Thread threadReceivedUsernames = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            /*Remove Results that the user has already sent a request for*/
+                            String[] requestedUsernames = new String[0];
+                            try {
+                                requestedUsernames = new JSONObject(resultFormPost.submitPost(resultReceivedRequestPageRequestResults, MethodType.POST)).getString("names").split("\n");
+                            } catch (JSONException e) {}
+
+                            setRemovableUsernames(requestedUsernames); //Callback function
+                        }
+                    });
+
+                    threadReceivedUsernames.start();
+                    threadReceivedUsernames.join();
+
+                    /*Need to do this because you can not alter adapter in a thread that is not in UI*/
+
+                    for(String cluster : removableUsernames) {
+                        if(!cluster.isEmpty()) {
+                            listItems.remove(FragmentUtils.returnParsedUsernameCluster(cluster));
+                        }
                     }
 
                     adapter.notifyDataSetChanged();
@@ -199,11 +234,15 @@ public class ConnectionAdd extends AppCompatActivity {
                                                 thread.start();
                                                 thread.join();
 
-                                                listItems.remove(pos);
-                                                adapter.notifyDataSetChanged(); /*Update the Data*/
-
                                                 Toast.makeText(ConnectionAdd.this, "Request send to: " + listItems.get(pos),
                                                         Toast.LENGTH_LONG).show();
+
+                                                Intent dataIntent = new Intent();
+
+                                                dataIntent.putExtra("userRequested", listItems.get(pos));
+                                                ConnectionAdd.this.setResult(200, dataIntent); //This helps populate the other fragments
+
+                                                ConnectionAdd.this.finish();
 
                                             } catch (Exception e) {
                                                 //TODO

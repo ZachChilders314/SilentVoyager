@@ -21,7 +21,11 @@ import com.x10host.burghporter31415.webconnector.FormPost;
 import com.x10host.burghporter31415.webconnector.MethodType;
 import com.x10host.burghporter31415.webconnector.PHPPage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Dashboard extends AppCompatActivity implements RequestsFragment.OnConnectionAddedListener {
 
@@ -33,6 +37,11 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     private Button btnAddConnection;
 
     private final String FILE_NAME="Silent_Voyager_Credentials.txt";
+    private String currentUsername;
+
+    private HashMap<String, String[]> userHash = new HashMap<String, String[]>();
+    private HashMap<String, Integer[]> last_ids = new HashMap<String, Integer[]>();
+
     private String[] arrResults = null;
     private String[] connectionResults = null;
     private String[] requestResults = null;
@@ -50,20 +59,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        /*
-        introVideoView = (VideoView) findViewById(R.id.introVideoView);
-
-        introVideoView.setVideoPath(getIntent().getExtras().getString("PATH"));
-        introVideoView.requestFocus();
-        introVideoView.start();
-
-        introVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setLooping(true);
-            }
-        }); */
-
+        if(currentUsername == null) currentUsername = getIntent().getExtras().getString("username");
         btnFilterOptions = (Button) findViewById(R.id.btnFilterOptions);
 
         btnFilterOptions.setOnClickListener(new View.OnClickListener(){
@@ -98,7 +94,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
                 intent.putExtra("PATH", getIntent().getExtras().getString("PATH"));
 
-                startActivityForResult(intent, 100);
+                startActivityForResult(intent, 200);
 
             }
         });
@@ -151,18 +147,31 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
                     //TODO Put on timer
                     String[] results = resultFormPost.submitPost(resultRequestPage, MethodType.POST).split("\n");
-                    String[] connectionResults = resultFormPost.submitPost(resultRequestPageResults, MethodType.POST).split("\n");
-                    String[] requestResults = resultFormPost.submitPost(resultRequestPageRequestResults, MethodType.POST).split("\n");
-                    String[] receivedResults = resultFormPost.submitPost(resultReceivedPageRequestResults, MethodType.POST).split("\n");
+                    JSONHolder connectionResultsJSON = null, requestResultsJSON = null, receivedResultsJSON = null;
+                    try {
+                        connectionResultsJSON = new JSONHolder(new JSONObject(resultFormPost.submitPost(resultRequestPageResults, MethodType.POST)));
+                        requestResultsJSON = new JSONHolder(new JSONObject(resultFormPost.submitPost(resultRequestPageRequestResults, MethodType.POST)));
+                        receivedResultsJSON = new JSONHolder(new JSONObject(resultFormPost.submitPost(resultReceivedPageRequestResults, MethodType.POST)));
+                    } catch(Exception e) {
+                        //TODO
+                    }
 
-                    updateResultSet(results, connectionResults,requestResults, receivedResults);
+                    userHash.put(getIntent().getExtras().getString("username"), results);
+                    try {
+
+                        updateResultSet(results, connectionResultsJSON.getAssocArray(),requestResultsJSON.getAssocArray(), receivedResultsJSON.getAssocArray());
+                        Integer[] keys = {connectionResultsJSON.getLastId(), requestResultsJSON.getLastId(), receivedResultsJSON.getLastId()};
+                        last_ids.put(getIntent().getExtras().getString("username"), keys);
+
+                    } catch (JSONException e) {}
+
                     populateComponents(results, connectionResults, requestResults, receivedResults);
 
                 }
             });
 
             thread.start();
-            thread.join(); /*Wait for the thread to finish, and then create executor service to split tasks*/
+            thread.join();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -172,7 +181,6 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
     /*Callback function after results have been returned for current user*/
     private void populateComponents(String[] results, String[] connectionResults, String[] requestResults, String[] receivedResults) {
-
         adapter.setData(results, connectionResults, requestResults, receivedResults);
         adapter.notifyDataSetChanged();
 
@@ -189,12 +197,15 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+
+        Bundle savedBundle;
+
         /*The request and result codes need to be set accordingly in the activities*/
         if (requestCode == 100 && resultCode==200) {
 
-            /*Parse the Data Passed (usernameSelection, maxEntriesSelection, startDate, endDate)*/
-            Bundle savedBundle = data.getExtras();
+            savedBundle = data.getExtras();
 
+            /*Parse the Data Passed (usernameSelection, maxEntriesSelection, startDate, endDate)*/
             final String username = savedBundle.getString("usernameSelection");
             final String maxEntries = savedBundle.getString("maxEntriesSelection");
 
@@ -203,34 +214,97 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
             /******************************************DONE IN THREAD AND THREAD MAIN**********************************************/
 
-            final String[] arrResults = this.arrResults;
+            if(!currentUsername.equals(username)) {
+                if(!userHash.containsKey(username)) {
 
-            Thread thread = new Thread(new Runnable() {
+                    /*We do not have the results stored on the device, so request it*/
+                    try {
 
-                @Override
-                public void run() {
+                        Thread thread = new Thread(new Runnable() {
 
-                    final FilterUtils utils = new FilterUtils(username, Integer.parseInt(maxEntries), startDate, endDate);
+                            @Override
+                            public void run() {
 
-                    runOnUiThread(new Runnable(){
-                        @Override
-                        public void run() {
+                                //TODO Put on timer
+                                resultFormPost.removePair("friend");
+                                resultFormPost.addPair("friend", username); //Extra field in POST body to get results of friend, not current user.
 
-                            String[] results = utils.getArrResult(arrResults);
-                            populateComponents(results, connectionResults, requestResults, receivedResults);
+                                final String[] results = resultFormPost.submitPost(resultRequestPage, MethodType.POST).split("\n");
+                                final FilterUtils utils = new FilterUtils(username, Integer.parseInt(maxEntries), startDate, endDate);
 
-                        }
-                    });
+                                userHash.put(username, results);
 
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        updateResultSet(userHash.get(username), connectionResults, requestResults, receivedResults);
+                                        String[] resultsFiltered = utils.getArrResult(userHash.get(username));
+                                        populateComponents(resultsFiltered, connectionResults, requestResults, receivedResults);
+                                    }
+                                });
+
+                            }
+                        });
+
+                        thread.start();
+                        thread.join();
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    /*We already have the data stored, so update the result set without requesting it from server again*/
+                    updateResultSet(userHash.get(username), connectionResults, requestResults, receivedResults);
+                    populateComponents(userHash.get(username), connectionResults, requestResults, receivedResults);
                 }
-            });
+                currentUsername = username; /*A different user has been selected, collect the data and insert into hash*/
 
-            try {
-                thread.start();
-                thread.join(); /*Wait for the thread to finish, and then create executor service to split tasks*/
-            } catch (InterruptedException e) {}
+            } else {
 
+                final String[] arrResults = this.arrResults;
+
+                Thread thread = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        final FilterUtils utils = new FilterUtils(username, Integer.parseInt(maxEntries), startDate, endDate);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                String[] results = utils.getArrResult(arrResults);
+                                populateComponents(results, connectionResults, requestResults, receivedResults);
+
+                            }
+                        });
+
+                    }
+                });
+
+                try {
+                    thread.start();
+                    thread.join(); /*Wait for the thread to finish, and then create executor service to split tasks*/
+                } catch (InterruptedException e) {
+                }
+            }
             /**********************************************************************************************************************/
+
+        } else if(requestCode == 200 && resultCode == 200) {
+
+            savedBundle = data.getExtras();
+
+            final String userRequested = savedBundle.getString("userRequested");
+
+            if(this.requestResults[0].isEmpty()) {
+                this.requestResults[0] = userRequested;
+            } else {
+                this.requestResults = (String[]) ArrayUtils.appendToArray(this.requestResults, userRequested);
+            }
+
+            populateComponents(adapter.getResults(), this.connectionResults, this.requestResults, this.receivedResults);
 
         }
 
@@ -325,7 +399,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
         else
             this.connectionResults = (String[]) ArrayUtils.appendToArray(this.connectionResults, connection);
 
-        this.requestResults = (String[])ArrayUtils.removeAll(this.requestResults, connection);
+        this.receivedResults = (String[])ArrayUtils.removeAll(this.receivedResults, connection);
         populateComponents(adapter.getResults(), this.connectionResults, this.requestResults, this.receivedResults);
 
     }

@@ -33,8 +33,10 @@ public class BackgroundServiceBroadcast extends BroadcastReceiver {
         intentService.putExtra("RELATIVE_URL", RELATIVE_URL);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.stopService(intentService);
             context.startForegroundService(intentService);
         } else {
+            context.stopService(intentService);
             context.startService(intentService);
         }
     }
