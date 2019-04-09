@@ -81,7 +81,9 @@ public class FormPost <K,V> {
 
     public void addPair(K key, V value) {
         this.KVMap.put(key, value);
-        this.values.add(value);
+        if(!this.values.contains(value)) {
+            this.values.add(value);
+        }
     }
 
     public void removePair(K key) {

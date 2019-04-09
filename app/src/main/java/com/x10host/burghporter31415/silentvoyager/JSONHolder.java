@@ -13,12 +13,12 @@ public class JSONHolder {
     }
 
     public String[] getAssocArray() throws JSONException {
-        return this.object.getString(arrayHolder).split("\n");
+        return this.object.has("names") ? this.object.getString(arrayHolder).split("\n") : new String[]{};
     }
 
     public int getLastId() throws JSONException {
-        return this.object.getString("last_id").isEmpty() ? -1 :
-                Integer.parseInt(this.object.getString("last_id"));
+        return (!this.object.has("last_id") ? -1 :
+                Integer.parseInt(this.object.getString("last_id")));
     }
 
 }

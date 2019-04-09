@@ -97,7 +97,9 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
 
         if(!resultDuo[0][0].isEmpty()) {
             for (int i = 0; i < resultDuo[0].length; i++) {
-                listItems.add(resultDuo[0][i].trim());
+                if(!resultDuo[0][i].isEmpty()) {
+                    listItems.add(resultDuo[0][i].trim());
+                }
             }
         }
 
@@ -154,13 +156,16 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
                         case DialogInterface.BUTTON_POSITIVE:
 
                             resultFormPost.addPair("user2", FragmentUtils.returnParsedUsernameCluster(selectedItem));
-                            resultFormPost.addPair("requested", FragmentUtils.returnParsedUsernameCluster(selectedItem));
+
+                            resultFormPost.addPair("requested", bundle.getString("username"));
+                            resultFormPost.addPair("requester", FragmentUtils.returnParsedUsernameCluster(selectedItem));
 
                             Thread thread = new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    //resultFormPost.submitPost(acceptConnection, MethodType.POST);
-                                    //resultFormPost.submitPost(removeRequest, MethodType.POST);
+                                    resultFormPost.submitPost(acceptConnection, MethodType.POST);
+                                    String s = resultFormPost.submitPost(removeRequest, MethodType.POST);
+                                    Log.i("com.x10host", s);
                                 }
                             });
 
@@ -171,7 +176,6 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
                                 Toast.makeText(getActivity(), "Accepted Connection for " + listItems.get((int) itemPosition), Toast.LENGTH_LONG).show();
 
                                 /*Callback to dashboard so that the information can be updated in other fragments*/
-
 
                                 listItems.remove(itemPosition);
                                 adapter.notifyDataSetChanged();
@@ -186,10 +190,12 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
 
                         case DialogInterface.BUTTON_NEGATIVE:
 
-                            resultFormPost.addPair("requested", bundle.getString("username"));
 
-                            resultFormPost.removePair("username");
-                            resultFormPost.addPair("username", selectedItem);
+                            resultFormPost.removePair("requester");
+                            resultFormPost.removePair("requested");
+
+                            resultFormPost.addPair("requested", bundle.getString("username"));
+                            resultFormPost.addPair("requester", FragmentUtils.returnParsedUsernameCluster(selectedItem));
 
                             Thread thread2 = new Thread(new Runnable() {
                                 @Override
@@ -199,6 +205,7 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
                             });
 
                             try {
+
                                 thread2.start();
                                 thread2.join();
 
@@ -222,7 +229,8 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
 
                         case DialogInterface.BUTTON_POSITIVE:
 
-                            resultFormPost.addPair("requested", selectedItem);
+                            resultFormPost.addPair("requester", bundle.getString("username"));
+                            resultFormPost.addPair("requested", FragmentUtils.returnParsedUsernameCluster(selectedItem));
 
                             Thread thread = new Thread(new Runnable() {
                                 @Override
@@ -276,7 +284,9 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
 
         if(!this.resultDuo[position][0].isEmpty()) {
             for(String item : this.resultDuo[position]) {
-                listItems.add(item);
+                if(!item.isEmpty()) {
+                    listItems.add(item);
+                }
            }
         }
 

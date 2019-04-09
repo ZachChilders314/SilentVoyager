@@ -2,6 +2,7 @@ package com.x10host.burghporter31415.silentvoyager;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.android.gms.common.util.ArrayUtils;
+import com.x10host.burghporter31415.fragments.ConnectionsFragment;
 import com.x10host.burghporter31415.fragments.DashboardPagerAdapter;
 import com.x10host.burghporter31415.fragments.RequestsFragment;
 import com.x10host.burghporter31415.internetservices.BackgroundServiceBroadcast;
@@ -25,9 +27,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
-public class Dashboard extends AppCompatActivity implements RequestsFragment.OnConnectionAddedListener {
+public class Dashboard extends AppCompatActivity implements RequestsFragment.OnConnectionAddedListener, ConnectionsFragment.OnConnectionRemovedListener {
 
     private VideoView introVideoView;
 
@@ -39,8 +44,10 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     private final String FILE_NAME="Silent_Voyager_Credentials.txt";
     private String currentUsername;
 
+    private FilterUtils utilsSaved;
+
     private HashMap<String, String[]> userHash = new HashMap<String, String[]>();
-    private HashMap<String, Integer[]> last_ids = new HashMap<String, Integer[]>();
+    private int[] last_ids = new int[3];
 
     private String[] arrResults = null;
     private String[] connectionResults = null;
@@ -52,12 +59,68 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     final PHPPage resultRequestPageResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/connection_results.php");
     final PHPPage resultRequestPageRequestResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/request_connection_results.php");
     final PHPPage resultReceivedPageRequestResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/received_connection_results.php");
+    final PHPPage checkUpdateResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/check_update.php");
+    final PHPPage deleteActionResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/delete_actions.php");
+
+    /*Need to cancel handler when activity is not active*/
+
+    final Handler handler = new Handler();
+    final Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            http://burghporter31415.x10host.com/Silent_Voyager/App_Scripts/check_update.php?username=burghporter314&password=Ipconfig314&num_0=3&num_1=4&num_2=6
+
+            if(!currentUsername.equals( getIntent().getExtras().getString("username"))) {
+                resultFormPost.addPair("friend", currentUsername);
+            }
+
+            if(!arrResults[0].isEmpty()) {
+                resultFormPost.addPair("recentDateStamp", Dashboard.this.arrResults[0].split(",")[5]);
+            } else {
+                resultFormPost.addPair("recentDateStamp", "0");
+            }
+
+            resultFormPost.addPair("num_0", String.valueOf(last_ids[0]));
+            resultFormPost.addPair("num_1", String.valueOf(last_ids[1]));
+            resultFormPost.addPair("num_2", String.valueOf(last_ids[2]));
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    final String json = resultFormPost.submitPost(checkUpdateResults, MethodType.POST);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                parseUpdate(json);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            });
+
+            try {
+                thread.start();
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // Repeat code again after 20 seconds
+            handler.postDelayed(this, 10000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        utilsSaved = new FilterUtils(getIntent().getExtras().getString("username"), 500, null, null);
 
         if(currentUsername == null) currentUsername = getIntent().getExtras().getString("username");
         btnFilterOptions = (Button) findViewById(R.id.btnFilterOptions);
@@ -114,8 +177,8 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
         }
 
         String[] args = {
-            getIntent().getExtras().getString("username"),
-            getIntent().getExtras().getString("password")
+                getIntent().getExtras().getString("username"),
+                getIntent().getExtras().getString("password")
         };
 
         /*Populate the bundle to pass to individual fragments*/
@@ -145,7 +208,6 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
                 @Override
                 public void run() {
 
-                    //TODO Put on timer
                     String[] results = resultFormPost.submitPost(resultRequestPage, MethodType.POST).split("\n");
                     JSONHolder connectionResultsJSON = null, requestResultsJSON = null, receivedResultsJSON = null;
                     try {
@@ -158,29 +220,39 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
                     userHash.put(getIntent().getExtras().getString("username"), results);
                     try {
-
                         updateResultSet(results, connectionResultsJSON.getAssocArray(),requestResultsJSON.getAssocArray(), receivedResultsJSON.getAssocArray());
-                        Integer[] keys = {connectionResultsJSON.getLastId(), requestResultsJSON.getLastId(), receivedResultsJSON.getLastId()};
-                        last_ids.put(getIntent().getExtras().getString("username"), keys);
+                        populateComponents(results, connectionResultsJSON.getAssocArray(),requestResultsJSON.getAssocArray(), receivedResultsJSON.getAssocArray());
 
-                    } catch (JSONException e) {}
+                        last_ids[0] = connectionResultsJSON.getLastId();
+                        last_ids[1] = requestResultsJSON.getLastId();
+                        last_ids[2] = receivedResultsJSON.getLastId();
 
-                    populateComponents(results, connectionResults, requestResults, receivedResults);
-
+                    } catch (JSONException e) {Log.i("com.x10host", e.toString());}
                 }
             });
 
             thread.start();
             thread.join();
 
+            /*TIMER FOR EVERY 10 SECONDS TO RETURN UPDATED PAYLOAD*/
+            // Create the Handler object (on the main thread by default)
+            // Define the code block to be executed
+
+            /*Remove any handlers that are potentially running during the start of the activity*/
+            handler.removeCallbacks(runnableCode);
+            handler.removeCallbacksAndMessages(null);
+
+            /*Start handler since activity is loaded*/
+            handler.post(runnableCode);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     /*Callback function after results have been returned for current user*/
     private void populateComponents(String[] results, String[] connectionResults, String[] requestResults, String[] receivedResults) {
+
         adapter.setData(results, connectionResults, requestResults, receivedResults);
         adapter.notifyDataSetChanged();
 
@@ -231,6 +303,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
                                 final String[] results = resultFormPost.submitPost(resultRequestPage, MethodType.POST).split("\n");
                                 final FilterUtils utils = new FilterUtils(username, Integer.parseInt(maxEntries), startDate, endDate);
+                                utilsSaved = utils;
 
                                 userHash.put(username, results);
 
@@ -254,9 +327,14 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
                     }
 
                 } else {
+
                     /*We already have the data stored, so update the result set without requesting it from server again*/
+                    final FilterUtils utils = new FilterUtils(username, Integer.parseInt(maxEntries), startDate, endDate);
+                    utilsSaved = utils;
+
                     updateResultSet(userHash.get(username), connectionResults, requestResults, receivedResults);
-                    populateComponents(userHash.get(username), connectionResults, requestResults, receivedResults);
+                    populateComponents(utilsSaved.getArrResult(userHash.get(username)), connectionResults, requestResults, receivedResults);
+
                 }
                 currentUsername = username; /*A different user has been selected, collect the data and insert into hash*/
 
@@ -270,6 +348,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
                     public void run() {
 
                         final FilterUtils utils = new FilterUtils(username, Integer.parseInt(maxEntries), startDate, endDate);
+                        utilsSaved = utils;
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -298,7 +377,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
             final String userRequested = savedBundle.getString("userRequested");
 
-            if(this.requestResults[0].isEmpty()) {
+            if(this.requestResults.length == 0 || this.requestResults[0].isEmpty()) {
                 this.requestResults[0] = userRequested;
             } else {
                 this.requestResults = (String[]) ArrayUtils.appendToArray(this.requestResults, userRequested);
@@ -340,15 +419,18 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
         public boolean isValidEntry(Pair pair) {
 
-            if(this.beginDate == null || this.endDate == null) {return false;}
+            if(this.beginDate == null || this.endDate == null) {return this.username.equals(pair.username);}
 
             return (this.username.equals(pair.username)
-                   && (this.beginDate.compareTo(pair.date) < 0)
-                   && (this.endDate.compareTo(pair.date) > 0));
+                    && (this.beginDate.compareTo(pair.date) < 0)
+                    && (this.endDate.compareTo(pair.date) > 0));
 
         }
 
         public String[] getArrResult(String[] arr) {
+
+            if(arr == null || arr.length == 0 || arr[0].isEmpty()) { return null; }
+
             //Row contains: Username, lat, long, alt, City, Datestamp
             ArrayList<String> list = new ArrayList<String>();
 
@@ -385,8 +467,9 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     @Override
     public void onAttachFragment(Fragment fragment) {
         if (fragment instanceof RequestsFragment) {
-            RequestsFragment headlinesFragment = (RequestsFragment) fragment;
             RequestsFragment.setOnConnectionAddedListener(this);
+        } else if(fragment instanceof ConnectionsFragment) {
+            ConnectionsFragment.setOnConnectionRemovedListener(this);
         }
     }
 
@@ -404,13 +487,127 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
     }
 
+    public void onConnectionRemoved(String connection) {
+        Log.i("com.x10host", connection);
+        this.connectionResults = (String[]) ArrayUtils.removeAll(this.connectionResults, connection);
+        updateResultSet(this.arrResults, this.connectionResults, this.requestResults, this.receivedResults);
+        populateComponents(adapter.getResults(), this.connectionResults, this.requestResults, this.receivedResults);
+    }
+
+    private void parseUpdate(String json) throws JSONException, InterruptedException {
+
+        JSONObject jsonObject = new JSONObject(json);
+        boolean itemsChanged = (jsonObject.has("payload") || jsonObject.has("names_0")
+                                    || jsonObject.has("names_1") || jsonObject.has("names_2")
+                                    || jsonObject.has("DELETE_CONNECTION") || jsonObject.has("DELETE_REQUEST"));
+
+        /*Handle the main entries received that are not on the device*/
+        List<String> list = new LinkedList<String>(Arrays.asList(this.arrResults));
+        if(jsonObject.has("payload")) {
+            String[] payload = jsonObject.getString("payload").split("\n");
+            for (int i = payload.length - 1; i >= 0; i--) {
+                list.add(0, payload[i]);
+            }
+            this.arrResults = list.toArray(new String[list.size()]);
+        }
+
+        /*Handle the connections received that are not on the device*/
+        list = new LinkedList<String>(Arrays.asList(this.connectionResults));
+        if(jsonObject.has("names_0")) {
+            for(String connection : jsonObject.getString("names_0").split("\n")) {
+                list.add(0, connection);
+            }
+            this.connectionResults = list.toArray(new String[list.size()]);
+        }
+
+        /*Handle the requests sent that are not on the device*/
+        list = new LinkedList<String>(Arrays.asList(this.requestResults));
+        if(jsonObject.has("names_1")) {
+            for(String requestResult : jsonObject.getString("names_1").split("\n")) {
+                list.add(0, requestResult);
+            }
+            this.requestResults = list.toArray(new String[list.size()]);
+        }
+
+        /*Handle the requests received that are not on the device*/
+        list = new LinkedList<String>(Arrays.asList(this.receivedResults));
+        if(jsonObject.has("names_2")) {
+            for(String receivedResult : jsonObject.getString("names_2").split("\n")) {
+                list.add(0, receivedResult);
+            }
+            this.receivedResults = list.toArray(new String[list.size()]);
+        }
+
+        if(jsonObject.has("DELETE_CONNECTION")) {
+            for(String connection : jsonObject.getString("DELETE_CONNECTION").split("\n")) {
+                if(!connection.isEmpty()) {
+                    this.connectionResults = (String[]) ArrayUtils.removeAll(this.connectionResults, connection);
+                }
+            }
+        }
+
+        if(jsonObject.has("DELETE_REQUEST")) {
+            for(String request : jsonObject.getString("DELETE_REQUEST").split("\n")) {
+                if(!request.isEmpty()) {
+                    this.requestResults = (String[]) ArrayUtils.removeAll(this.requestResults, request);
+                    this.receivedResults = (String[]) ArrayUtils.removeAll(this.receivedResults, request);
+                }
+            }
+        }
+
+        last_ids[0] = (!jsonObject.has("last_id_0") ? last_ids[0] :
+                Integer.parseInt(jsonObject.getString("last_id_0")));
+
+        last_ids[1] = (!jsonObject.has("last_id_1") ? last_ids[1] :
+                Integer.parseInt(jsonObject.getString("last_id_1")));
+
+        last_ids[2] = (!jsonObject.has("last_id_2") ? last_ids[2] :
+                Integer.parseInt(jsonObject.getString("last_id_2")));
+
+        /*Don't update components unless an item was changed*/
+
+        if(itemsChanged) {
+            populateComponents(utilsSaved != null ? utilsSaved.getArrResult(this.arrResults) : this.arrResults, this.connectionResults, this.requestResults, this.receivedResults);
+        }
+
+        if(jsonObject.has("last_id_3") && !jsonObject.getString("last_id_3").equals("null")) {
+
+            final FormPost<String, String> actionPost = new FormPost<>();
+
+            actionPost.addPair("username", getIntent().getExtras().getString("username"));
+            actionPost.addPair("password", getIntent().getExtras().getString("password"));
+            actionPost.addPair("last_id", jsonObject.getString("last_id_3"));
+
+            Thread thread = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   /*DELETE INTERMEDIARY RESULTS*/
+                   String s = actionPost.submitPost(deleteActionResults, MethodType.POST);
+               }
+            });
+
+            thread.start();
+            thread.join();
+        }
+
+    }
 
 
-    /*
     @Override
-    protected void onResume() {
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnableCode);
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnableCode);
+    }
+
+    @Override protected void onResume() {
         super.onResume();
-        introVideoView.start();
-    } */
+        handler.removeCallbacksAndMessages(null);
+        handler.post(runnableCode);
+    }
 
 }

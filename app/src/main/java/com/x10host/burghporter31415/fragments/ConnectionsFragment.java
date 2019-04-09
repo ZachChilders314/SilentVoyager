@@ -31,9 +31,16 @@ public class ConnectionsFragment extends Fragment {
 
 
     private ArrayAdapter<String> adapter;
+    static ConnectionsFragment.OnConnectionRemovedListener callback;
 
-    public ConnectionsFragment() {
-        // Required empty public constructor
+    public static void setOnConnectionRemovedListener(ConnectionsFragment.OnConnectionRemovedListener callbackOrig) {
+        callback = callbackOrig;
+    }
+
+    // This interface can be implemented by the Activity, parent Fragment,
+    // or a separate test implementation.
+    public interface OnConnectionRemovedListener {
+        public void onConnectionRemoved(String connection);
     }
 
     @Override
@@ -47,7 +54,7 @@ public class ConnectionsFragment extends Fragment {
 
         ArrayList<String> listItems = new ArrayList<String>();
 
-        if(arr.length == 0 || arr[0].isEmpty()) {return rootView; }
+        if(arr == null || arr.length == 0|| arr[0].isEmpty()) {return rootView;}
 
         for(int i = 0; i < arr.length; i++) { listItems.add(arr[i].trim()); }
 
@@ -103,6 +110,7 @@ public class ConnectionsFragment extends Fragment {
             adapter.remove(data.getStringExtra("removed"));
         }
 
+        callback.onConnectionRemoved(data.getStringExtra("removed"));
         super.onActivityResult(requestCode, resultCode, data);
 
     }
