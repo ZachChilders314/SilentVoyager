@@ -18,4 +18,8 @@ public final class FragmentUtils {
         return cluster.substring(start, cluster.length() - 1);
     }
 
+    public static boolean isEmpty(String[] arr) {
+        return (arr == null || arr.length == 0 || arr[0].isEmpty());
+    }
+
 }

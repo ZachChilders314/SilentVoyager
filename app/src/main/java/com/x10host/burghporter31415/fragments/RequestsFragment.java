@@ -38,6 +38,7 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
     // or a separate test implementation.
     public interface OnConnectionAddedListener {
         public void onConnectionAdded(String connection);
+        public void onRequestCancelled(String request);
     }
 
     private static ArrayAdapter<String> adapter;
@@ -164,8 +165,7 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
                                 @Override
                                 public void run() {
                                     resultFormPost.submitPost(acceptConnection, MethodType.POST);
-                                    String s = resultFormPost.submitPost(removeRequest, MethodType.POST);
-                                    Log.i("com.x10host", s);
+                                    resultFormPost.submitPost(removeRequest, MethodType.POST);
                                 }
                             });
 
@@ -212,6 +212,8 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
                                 listItems.remove(itemPosition);
                                 adapter.notifyDataSetChanged();
 
+                                callback.onConnectionAdded(selectedItem);
+
                             } catch (Exception e) {
                                 //TODO
                             }
@@ -245,6 +247,8 @@ public class RequestsFragment extends Fragment implements AdapterView.OnItemClic
 
                                 listItems.remove(itemPosition);
                                 adapter.notifyDataSetChanged();
+
+                                callback.onRequestCancelled(selectedItem);
 
                             } catch (Exception e) {
                                 //TODO

@@ -67,11 +67,11 @@ public class Filter extends AppCompatActivity {
         /*Populate Spinner with username and associative connections*/
 
         String[] connections = (String[])getIntent().getExtras().get("connections");
-        String[] arr = new String[connections[0].isEmpty() ? 1 : connections.length + 1];
+        String[] arr = new String[FragmentUtils.isEmpty(connections) ? 1 : connections.length + 1];
 
         arr[0] = (String) getIntent().getExtras().get("username");
 
-        if(!connections[0].isEmpty()) {
+        if(!FragmentUtils.isEmpty(connections)) {
             for (int i = 0; i < connections.length; i++) {
                 arr[i + 1] = FragmentUtils.returnParsedUsernameCluster(connections[i]);
             }

@@ -17,6 +17,7 @@ import android.widget.VideoView;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.x10host.burghporter31415.fragments.ConnectionsFragment;
 import com.x10host.burghporter31415.fragments.DashboardPagerAdapter;
+import com.x10host.burghporter31415.fragments.FragmentUtils;
 import com.x10host.burghporter31415.fragments.RequestsFragment;
 import com.x10host.burghporter31415.internetservices.BackgroundServiceBroadcast;
 import com.x10host.burghporter31415.webconnector.FormPost;
@@ -371,20 +372,6 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
             }
             /**********************************************************************************************************************/
 
-        } else if(requestCode == 200 && resultCode == 200) {
-
-            savedBundle = data.getExtras();
-
-            final String userRequested = savedBundle.getString("userRequested");
-
-            if(this.requestResults.length == 0 || this.requestResults[0].isEmpty()) {
-                this.requestResults[0] = userRequested;
-            } else {
-                this.requestResults = (String[]) ArrayUtils.appendToArray(this.requestResults, userRequested);
-            }
-
-            populateComponents(adapter.getResults(), this.connectionResults, this.requestResults, this.receivedResults);
-
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -477,18 +464,29 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     public void onConnectionAdded(String connection) {
 
         /*Add the new connection to the array and update the fragments with the new data*/
-        if(this.connectionResults[0].isEmpty())
+        if(FragmentUtils.isEmpty(this.connectionResults))
             this.connectionResults[0] = connection;
         else
             this.connectionResults = (String[]) ArrayUtils.appendToArray(this.connectionResults, connection);
 
         this.receivedResults = (String[])ArrayUtils.removeAll(this.receivedResults, connection);
+
+        updateResultSet(this.arrResults, this.connectionResults, this.requestResults, this.receivedResults);
+        populateComponents(adapter.getResults(), this.connectionResults, this.requestResults, this.receivedResults);
+
+    }
+
+    public void onRequestCancelled(String request) {
+
+        this.receivedResults = (String[])ArrayUtils.removeAll(this.receivedResults, request);
+        this.requestResults = (String[])ArrayUtils.removeAll(this.requestResults, request);
+
+        updateResultSet(this.arrResults, this.connectionResults, this.requestResults, this.receivedResults);
         populateComponents(adapter.getResults(), this.connectionResults, this.requestResults, this.receivedResults);
 
     }
 
     public void onConnectionRemoved(String connection) {
-        Log.i("com.x10host", connection);
         this.connectionResults = (String[]) ArrayUtils.removeAll(this.connectionResults, connection);
         updateResultSet(this.arrResults, this.connectionResults, this.requestResults, this.receivedResults);
         populateComponents(adapter.getResults(), this.connectionResults, this.requestResults, this.receivedResults);
@@ -516,6 +514,10 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
         if(jsonObject.has("names_0")) {
             for(String connection : jsonObject.getString("names_0").split("\n")) {
                 list.add(0, connection);
+
+                /*If the connection has been accepted, the requests no longer should exist*/
+                this.requestResults = (String[]) ArrayUtils.removeAll(this.requestResults, connection);
+                this.receivedResults = (String[]) ArrayUtils.removeAll(this.receivedResults, connection);
             }
             this.connectionResults = list.toArray(new String[list.size()]);
         }
@@ -582,7 +584,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
                @Override
                public void run() {
                    /*DELETE INTERMEDIARY RESULTS*/
-                   String s = actionPost.submitPost(deleteActionResults, MethodType.POST);
+                   actionPost.submitPost(deleteActionResults, MethodType.POST);
                }
             });
 
