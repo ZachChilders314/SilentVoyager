@@ -55,6 +55,8 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     private String[] requestResults = null;
     private String[] receivedResults = null;
 
+    private final int MAX_SIZE = 500;
+
     final FormPost<String, String> resultFormPost = new FormPost<>();
     final PHPPage resultRequestPage = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/get_results.php");
     final PHPPage resultRequestPageResults = new PHPPage("http://burghporter31415.x10host.com/Silent_Voyager", "/App_Scripts/Connection_Scripts/connection_results.php");
@@ -121,7 +123,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        utilsSaved = new FilterUtils(getIntent().getExtras().getString("username"), 500, null, null);
+        utilsSaved = new FilterUtils(getIntent().getExtras().getString("username"), MAX_SIZE, null, null);
 
         if(currentUsername == null) currentUsername = getIntent().getExtras().getString("username");
         btnFilterOptions = (Button) findViewById(R.id.btnFilterOptions);
@@ -157,6 +159,7 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
                 intent.putExtra("password", getIntent().getExtras().getString("password"));
 
                 intent.putExtra("PATH", getIntent().getExtras().getString("PATH"));
+                intent.putExtra("connections", connectionResults);
 
                 startActivityForResult(intent, 200);
 
@@ -463,11 +466,14 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
     /*UPDATE DATA INTENT THROUGH INTERFACE*/
     public void onConnectionAdded(String connection) {
 
+        Log.i("com.x10host", connection);
         /*Add the new connection to the array and update the fragments with the new data*/
-        if(FragmentUtils.isEmpty(this.connectionResults))
-            this.connectionResults[0] = connection;
-        else
+        if(FragmentUtils.isEmpty(this.connectionResults)) {
             this.connectionResults = (String[]) ArrayUtils.appendToArray(this.connectionResults, connection);
+        }
+        else {
+            this.connectionResults = (String[]) ArrayUtils.appendToArray(this.connectionResults, connection);
+        }
 
         this.receivedResults = (String[])ArrayUtils.removeAll(this.receivedResults, connection);
 
@@ -494,10 +500,12 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
 
     private void parseUpdate(String json) throws JSONException, InterruptedException {
 
+        Log.i("com.x10host", json);
+
         JSONObject jsonObject = new JSONObject(json);
         boolean itemsChanged = (jsonObject.has("payload") || jsonObject.has("names_0")
                                     || jsonObject.has("names_1") || jsonObject.has("names_2")
-                                    || jsonObject.has("DELETE_CONNECTION") || jsonObject.has("DELETE_REQUEST"));
+                                    || jsonObject.has("DELETE_CONNECTION") || jsonObject.has("REMOVE_REQUEST"));
 
         /*Handle the main entries received that are not on the device*/
         List<String> list = new LinkedList<String>(Arrays.asList(this.arrResults));
@@ -513,7 +521,10 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
         list = new LinkedList<String>(Arrays.asList(this.connectionResults));
         if(jsonObject.has("names_0")) {
             for(String connection : jsonObject.getString("names_0").split("\n")) {
-                list.add(0, connection);
+
+                if(!list.contains(connection)) {
+                    list.add(0, connection);
+                }
 
                 /*If the connection has been accepted, the requests no longer should exist*/
                 this.requestResults = (String[]) ArrayUtils.removeAll(this.requestResults, connection);
@@ -548,8 +559,8 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
             }
         }
 
-        if(jsonObject.has("DELETE_REQUEST")) {
-            for(String request : jsonObject.getString("DELETE_REQUEST").split("\n")) {
+        if(jsonObject.has("REMOVE_REQUEST")) {
+            for(String request : jsonObject.getString("REMOVE_REQUEST").split("\n")) {
                 if(!request.isEmpty()) {
                     this.requestResults = (String[]) ArrayUtils.removeAll(this.requestResults, request);
                     this.receivedResults = (String[]) ArrayUtils.removeAll(this.receivedResults, request);
@@ -569,6 +580,12 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
         /*Don't update components unless an item was changed*/
 
         if(itemsChanged) {
+
+            /*DO NOT Allow for there to be more than the allocated elements*/
+            if(this.arrResults.length > MAX_SIZE) {
+                this.arrResults = Arrays.copyOf(this.arrResults, MAX_SIZE);
+            }
+
             populateComponents(utilsSaved != null ? utilsSaved.getArrResult(this.arrResults) : this.arrResults, this.connectionResults, this.requestResults, this.receivedResults);
         }
 

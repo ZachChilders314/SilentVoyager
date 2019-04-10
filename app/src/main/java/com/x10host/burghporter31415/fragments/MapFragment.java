@@ -84,7 +84,7 @@ public class MapFragment extends Fragment implements Broadcastable, OnMapReadyCa
         }
 
         Polygon polygon = map.addPolygon(rectOptions);
-        polygon.setStrokeColor(Color.parseColor("#FFFFFF"));
+        polygon.setStrokeColor(Color.parseColor("#0099ff"));
 
         boolean success = map.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(

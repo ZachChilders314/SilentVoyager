@@ -108,9 +108,9 @@ public class ConnectionsFragment extends Fragment {
         /*The request and result codes need to be set accordingly in the activities*/
         if (!(data == null) && !(data.getStringExtra("removed") == null)) {
             adapter.remove(data.getStringExtra("removed"));
+            callback.onConnectionRemoved(data.getStringExtra("removed"));
         }
 
-        callback.onConnectionRemoved(data.getStringExtra("removed"));
         super.onActivityResult(requestCode, resultCode, data);
 
     }

@@ -203,6 +203,10 @@ public class ConnectionAdd extends AppCompatActivity {
                         }
                     }
 
+                    for(String connection : getIntent().getStringArrayExtra("connections")) {
+                        listItems.remove(FragmentUtils.returnParsedUsernameCluster(connection));
+                    }
+
                     adapter.notifyDataSetChanged();
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
