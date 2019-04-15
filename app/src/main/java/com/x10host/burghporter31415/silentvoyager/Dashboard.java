@@ -629,4 +629,9 @@ public class Dashboard extends AppCompatActivity implements RequestsFragment.OnC
         handler.post(runnableCode);
     }
 
+    @Override protected void onRestart() {
+        super.onRestart();
+        handler.post(runnableCode);
+    }
+
 }
